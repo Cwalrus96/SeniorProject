@@ -11,12 +11,13 @@ Implement button + mouse controls
 static Scene s;  //Keeps track of the current screen 
 static float screenX = 375;   //Tracks the width of the screen
 static float screenY = 667; //Tracks the height of the screen 
-static boolean debug = true;   //Flag used to view debug features such as mouse position
+static boolean debug = false;   //Flag used to view debug features such as mouse position
 static int targetFPS = 60;   //The desired frame-per-second rate 
-long oldT; 
+long oldT; //This variable, along with newT, will be used to keep track of the amount of time between frames 
 long newT; 
-long diff;
-int frameLength; 
+long diff; //This will hold the difference from oldT to newT
+int frameLength; //This variable holds the desired amount of time between frames rendered 
+Player p; //Holds information about the current player. For now, simply create a blank player. In the future, player information will be loaded from a save file 
 
 
 
@@ -31,6 +32,7 @@ void setup()
   //b. Initialize Global Variables 
     //i. The first scene should always be the start menu
     s = new StartMenu(); 
+    p = new Player();
     //These variables will be used to track time and keep the game running at the target frames per second
     oldT = millis(); 
     newT = oldT; 
@@ -38,14 +40,14 @@ void setup()
    
 }
 
-void draw()
+void draw() //This function draws everything to the screen. For the most part, will simply draw the current scene. Has potential for some debugging information 
 {
   newT = millis(); 
-  diff = newT - oldT; 
+  diff = newT - oldT; //Only draws the scene if enough time has passed 
   if(diff > frameLength)
   {
     s.drawScene(diff); 
-    if(debug)
+    if(debug) //If the debug flag is set, draws additional information to the screen 
     {
        textAlign(LEFT); 
        textSize(screenY * 0.03); 
@@ -55,15 +57,13 @@ void draw()
   }
 }
 
+//For all input event functions, simply call the corresponding function in the current scene
 
-//This function will be called to deal with mouse clicks. For the most part, it should be used to call the corresponding function in the current scene
-//TODO: update mouse functions so that they deal with taps and touches 
 void mouseClicked() 
 {
   s.mouseClicked(); 
 }
 
-//This function will deal with users pressing the mouse button by calling the corresponding function in the current scene
 void mousePressed()
 {
    s.mousePressed();  
@@ -76,7 +76,7 @@ void mouseReleased()
 
 void mouseDragged()
 {
-  
+   s.mouseDragged();
 }
 
 void keyPressed()
