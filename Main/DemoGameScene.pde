@@ -110,6 +110,15 @@ class DemoGameScene implements Scene
            currentRune = new NullRune("Null", (gridRightEdge - gridLeftEdge) / 2.0, (screenY) - (runeSize / 2) - (runeSize * gridSize), runeSize);
            nextRune = true;
       }
+      //Prevents runes from moving beyond the left edge
+      if((currentRune.x - (runeSize / 2.0)) < gridLeftEdge) 
+      {
+         currentRune.x = gridLeftEdge + (runeSize / 2.0);
+      }//prevents rune from moving beyond right edge
+      if((currentRune.x + (runeSize / 2.0)) > gridRightEdge)
+      {
+         currentRune.x = gridRightEdge - (runeSize / 2.0);  
+      }
       
       
   }
