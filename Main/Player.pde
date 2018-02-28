@@ -4,12 +4,12 @@ class Player
   //TODO: Expand player - allow customization, keep track of unlocked skills and abilities, 
   //Track stats, experience, level, appearance, inventory, equipment, etc. 
   
-  int health; 
-  ArrayList<String> unlockedRunes;
+  float health; //Tracks the player's health value
+  ArrayList<String> unlockedRunes; //Keeps track of what runes the player currently has available
   
   Player()
   {
-     health = 100; 
+     health = 100.0; 
      unlockedRunes = new ArrayList<String>(); 
      unlockedRunes.add("Fire"); 
      unlockedRunes.add("Slash"); 

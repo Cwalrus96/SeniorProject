@@ -27,7 +27,7 @@ class DemoGameScene implements Scene
        for(int j = 0; j < gridSize; j++)
        {
           //Fills the grid with null runes, which are nothing but placeholders 
-          r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2) + (runeSize * j), (screenY) - (runeSize / 2) - (runeSize * i), runeSize);
+          r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0) + (runeSize * j), (screenY) - (runeSize / 2) - (runeSize * i), runeSize);
        }
     }
   }
@@ -44,7 +44,14 @@ class DemoGameScene implements Scene
     checkCollisions(); 
     currentRune.drawRune();
     //println("Current rune x = " + currentRune.x + ", Current rune y = " + currentRune.y); 
-    drawRuneGrid(); 
+    drawRuneGrid();
+    //1. Draw enemy and player 
+    //2. Draw enemy + player health bars
+      //health bars should change size and color based on health
+    //3. Draw energy bar 
+      //attacking reduces energy, clearing runes fills it
+    //4. Draw spellbox
+      //runes that don't combine dissappear, pressing attack clears spellbox + creates effects 
   }
   
   //There should always be a rune falling from the top of the screen. If there is not, the game should create one
@@ -55,22 +62,22 @@ class DemoGameScene implements Scene
     //Whatever the rune type, draws it at the top of the grid, and in the horizontal center 
     if(label.equals("Fire"))
     {
-       currentRune = new FireRune("Fire", (gridRightEdge - gridLeftEdge) / 2.0, (screenY) - (runeSize / 2) - (runeSize * gridSize), runeSize);  
+       currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge , (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);  
        println("Created a new Fire Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize); 
     }
     else if(label.equals("Heal"))
     {
-        currentRune = new HealRune("Heal", (gridRightEdge - gridLeftEdge) / 2.0, (screenY) - (runeSize / 2) - (runeSize * gridSize), runeSize);
+        currentRune = new HealRune("Heal", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge, (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
         println("Created a new Healing Rune. X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize); 
     }
     else if(label.equals("Slash"))
     {
-        currentRune = new SlashRune("Slash", (gridRightEdge - gridLeftEdge) / 2.0, (screenY) - (runeSize / 2) - (runeSize * gridSize), runeSize);
+        currentRune = new SlashRune("Slash", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge, (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
         println("Created a new Slash Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
     }
     else
     {
-        currentRune = new FireRune("Fire", (gridRightEdge - gridLeftEdge) / 2.0, (screenY) - (runeSize / 2) - (runeSize * gridSize), runeSize);
+        currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge, (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
         println("Label not recognized =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
     }
     currentRune.speedY = 1; 
@@ -81,7 +88,7 @@ class DemoGameScene implements Scene
   //This function will be used to track the position of the currentRune in terms of the game grid, and look for collisions
   void checkCollisions()
   {
-      squareX = ((int) ((currentRune.x - (Main.screenX * 0.1)) / runeSize)); //squareX and squareY represent the current rune's position in the rune grid 
+      squareX = ((int) ((currentRune.x - gridLeftEdge) / runeSize)); //squareX and squareY represent the current rune's position in the rune grid 
       squareY = ((int) ((Main.screenY - currentRune.y) / runeSize));
       //Floor represents a bottom edge that the rune should not go below
       float floor = (Main.screenY - (((squareY - 1) * runeSize) + (runeSize / 2))); 
@@ -95,7 +102,7 @@ class DemoGameScene implements Scene
            currentRune.y = (Main.screenY) - (runeSize / 2) - (runeSize * squareY);
            currentRune.speedX = 0; 
            currentRune.speedY = 0;
-           currentRune = new NullRune("Null", (gridRightEdge - gridLeftEdge) / 2.0, (screenY) - (runeSize / 2) - (runeSize * gridSize), runeSize);
+           currentRune = new NullRune("Null", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge , (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
            nextRune = true;
         }
       }
@@ -111,14 +118,31 @@ class DemoGameScene implements Scene
            nextRune = true;
       }
       //Prevents runes from moving beyond the left edge
-      if((currentRune.x - (runeSize / 2.0)) < gridLeftEdge) 
+      if(squareX == 0)
       {
-         currentRune.x = gridLeftEdge + (runeSize / 2.0);
-      }//prevents rune from moving beyond right edge
-      if((currentRune.x + (runeSize / 2.0)) > gridRightEdge)
-      {
-         currentRune.x = gridRightEdge - (runeSize / 2.0);  
+        if((currentRune.x - (runeSize / 2.0)) < gridLeftEdge) 
+        {
+           currentRune.x = gridLeftEdge + (runeSize / 2.0);
+        }
       }
+      //Check the rune to the left of the currentRune
+      /**else if((!(r[squareY][squareX - 1].type.equals("Null"))) && (currentRune.x < (gridLeftEdge - ((squareX - 1) * runeSize) - (runeSize / 2.0))))
+      {
+        currentRune.x = (gridLeftEdge - ((squareX - 1) * runeSize) - (runeSize / 2.0));
+      }**/
+      //prevents rune from moving beyond right edge
+      if(squareX == gridSize - 1)
+      {
+        if((currentRune.x + (runeSize / 2.0)) > gridRightEdge)
+        {
+           currentRune.x = gridRightEdge - (runeSize / 2.0);  
+        }
+      }
+      else if(currentRune.x == 10000)
+      {
+        
+      }
+      //Check collisions with the right and left edges of runes in the rune grid 
       
       
   }
