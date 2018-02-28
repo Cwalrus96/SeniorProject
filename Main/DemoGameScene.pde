@@ -6,7 +6,7 @@ class DemoGameScene implements Scene
   //1. Class Variables
   Enemy e; //Keeps track of the enemy that you are currently battling
   Rune[][] r; 
-  int gridSize = 7; //Adjusts the size of the grid, and therefore the number of runes
+  int gridSize = 9; //Adjusts the size of the grid, and therefore the number of runes
   boolean nextRune = true; //This flag keeps track of when to generate the next rune
   float gridLeftEdge = (Main.screenX * 0.1); //Keeps track of the leftmost edge of the rune grid. Runes should not go beyond this point
   float gridRightEdge = (Main.screenX * 0.9); //Keeps track of the right edge of the rune grid
@@ -91,11 +91,37 @@ class DemoGameScene implements Scene
       squareX = ((int) ((currentRune.x - gridLeftEdge) / runeSize)); //squareX and squareY represent the current rune's position in the rune grid 
       squareY = ((int) ((Main.screenY - currentRune.y) / runeSize));
       //Floor represents a bottom edge that the rune should not go below
-      float floor = (Main.screenY - (((squareY - 1) * runeSize) + (runeSize / 2))); 
-      //println("SquareX = " + squareX + ", SquareY = " + squareY + " X = " + currentRune.x + ", Y = " + currentRune.y + ", floor = " + floor); 
-      if(squareY == 0) //if squareY is zero, rune should not go any lower 
-      { //Prevents the rune from going any lower than the bottom of the screen. If rune gets that far, add it to the grid and create new rune
-        if((currentRune.y + currentRune.size / 2) >= Main.screenY) 
+      float floor = Main.screenY;
+      for(int i = gridSize - 1; i >= 0; i--) 
+      {
+        if(!(r[i][squareX].type.equals("Null")))
+        {
+           floor = Main.screenY - (runeSize * (i + 1)); 
+           break;
+        }
+      } 
+      //left represents the leftmost edge that the rune should not pass
+      float leftEdge = gridLeftEdge; 
+      for(int i = squareX; i >= 0; i--) 
+      {
+          if(!(r[squareY][i].type.equals("Null")))
+          {
+             leftEdge = gridLeftEdge + (runeSize * (i + 1)); 
+             break;
+          }
+      }
+      float rightEdge = gridRightEdge; 
+      for(int i = squareX; i < gridSize; i++)
+      {
+         if(!(r[squareY][i].type.equals("Null")))
+         {
+            rightEdge = gridLeftEdge + (runeSize * i);
+            break;
+         }
+      }
+      println("SquareX = " + squareX + ", SquareY = " + squareY + " X = " + currentRune.x + ", Y = " + currentRune.y + ", floor = " + floor + ", leftEdge = " + leftEdge); 
+      //Prevents the rune from going any lower than the bottom of the screen. If rune gets that far, add it to the grid and create new rune
+        if((currentRune.y + (currentRune.size / 2) + currentRune.speedY) >= floor) 
         {
            r[squareY][squareX] = currentRune; 
            currentRune.x = (Main.screenX * 0.1) + (runeSize / 2) + (runeSize * squareX);
@@ -105,46 +131,32 @@ class DemoGameScene implements Scene
            currentRune = new NullRune("Null", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge , (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
            nextRune = true;
         }
-      }
-      //If rune collides with the rune below it, add it to the grid
-      else if((!(r[squareY - 1][squareX].type.equals("Null"))) && (currentRune.y >= (Main.screenY - ((squareY + 1) * runeSize) - (runeSize / 2)))) 
-      {
-          r[squareY][squareX] = currentRune; 
-           currentRune.x = (Main.screenX * 0.1) + (runeSize / 2) + (runeSize * squareX);
-           currentRune.y = (Main.screenY) - (runeSize / 2) - (runeSize * squareY);
-           currentRune.speedX = 0; 
-           currentRune.speedY = 0;
-           currentRune = new NullRune("Null", (gridRightEdge - gridLeftEdge) / 2.0, (screenY) - (runeSize / 2) - (runeSize * gridSize), runeSize);
-           nextRune = true;
-      }
       //Prevents runes from moving beyond the left edge
-      if(squareX == 0)
+      if((currentRune.x - (runeSize / 2.0) + currentRune.speedX) < leftEdge) 
       {
-        if((currentRune.x - (runeSize / 2.0)) < gridLeftEdge) 
-        {
-           currentRune.x = gridLeftEdge + (runeSize / 2.0);
-        }
+         currentRune.x = leftEdge + (runeSize / 2.0) - currentRune.speedX;
       }
-      //Check the rune to the left of the currentRune
-      /**else if((!(r[squareY][squareX - 1].type.equals("Null"))) && (currentRune.x < (gridLeftEdge - ((squareX - 1) * runeSize) - (runeSize / 2.0))))
-      {
-        currentRune.x = (gridLeftEdge - ((squareX - 1) * runeSize) - (runeSize / 2.0));
-      }**/
       //prevents rune from moving beyond right edge
-      if(squareX == gridSize - 1)
+      if((currentRune.x + (runeSize / 2.0) + currentRune.speedX) > rightEdge)
       {
-        if((currentRune.x + (runeSize / 2.0)) > gridRightEdge)
-        {
-           currentRune.x = gridRightEdge - (runeSize / 2.0);  
-        }
+         currentRune.x = rightEdge - (runeSize / 2.0) - currentRune.speedX;  
       }
-      else if(currentRune.x == 10000)
-      {
-        
-      }
-      //Check collisions with the right and left edges of runes in the rune grid 
-      
-      
+  }
+  
+  //This function will be called whenever a new rune is added to the grid. Will clear away any connections, and lower the runes to their proper places.
+  //Will also remove any runes in the upper areas of the grid and damage the player for going too high. Finally, will clear runes in the spellbox if they are not a proper combination 
+  //Every time a set of runes is cleared (except in the upper rows or the spellbox), fill some of the player's action bar
+  void clearRunes()
+  {
+     //First, clear all horizontal segments
+       //Loop through all runes, and if three (or more) connect in a row then clear them all
+       //Once they are cleared, lower all runes above them to the lowest empty spot 
+     
+     //Secondly, clear all vertical segments 
+     
+     //After moving the segments, new combinations may have been created. Go loop until no combinations are left
+    
+     //Third, if there are still runes in the upper two rows after all combinations have been cleared, remove them and damage the player
   }
   
   //This function will be used to draw all previous runes that have not been cleared yet. 
@@ -192,11 +204,11 @@ class DemoGameScene implements Scene
      {
         if(keyCode == LEFT)
         {
-           currentRune.speedX = -1;  
+           currentRune.speedX = -3;  
         }
         else if(keyCode == RIGHT)
         {
-           currentRune.speedX = 1;  
+           currentRune.speedX = 3;  
         }
         else if(keyCode == DOWN)
         {

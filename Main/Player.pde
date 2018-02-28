@@ -5,6 +5,7 @@ class Player
   //Track stats, experience, level, appearance, inventory, equipment, etc. 
   
   float health; //Tracks the player's health value
+  float energy; //Tracks the player's energy value (gets reduced when player attacks, fills from clearing runes) 
   ArrayList<String> unlockedRunes; //Keeps track of what runes the player currently has available
   
   Player()
