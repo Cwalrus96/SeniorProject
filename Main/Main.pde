@@ -17,7 +17,7 @@ long oldT; //This variable, along with newT, will be used to keep track of the a
 long newT; 
 long diff; //This will hold the difference from oldT to newT
 int frameLength; //This variable holds the desired amount of time between frames rendered 
-Player p; //Holds information about the current player. For now, simply create a blank player. In the future, player information will be loaded from a save file 
+static Player p; //Holds information about the current player. For now, simply create a blank player. In the future, player information will be loaded from a save file 
 
 
 
