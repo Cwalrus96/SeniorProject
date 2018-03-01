@@ -28,8 +28,12 @@ class Player
   
   void drawPlayer()
   {
+    //This blue triangle represents the player's body
     fill(200, 200, 255);
-    triangle(x, y, x + (Main.screenX * 0.2), y, x + (Main.screenX * 0.1), y + (Main.screenX * 0.2));
+    triangle(x, y, x + (Main.screenX * 0.2), y, x + (Main.screenX * 0.1), y - (Main.screenX * 0.2));
+    //this (hopefully) peach colored circle represents the player's head
+    fill(255, 245, 200);
+    ellipse(x + (Main.screenX * 0.1), y - (Main.screenX * 0.3), Main.screenX * 0.2, Main.screenX * 0.2);
   }
   
   

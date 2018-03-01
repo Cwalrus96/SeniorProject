@@ -21,6 +21,7 @@ class DemoGameScene implements Scene
   int maxNum = 2;
   int start = ((gridSize - boxWidth) / 2);
   int end = start + boxWidth;
+  String status; //Keeps track of the current state of the program. Possible states are - ON, PAUSED, WIN, and LOSE
 
 
 
@@ -40,6 +41,7 @@ class DemoGameScene implements Scene
         r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0) + (runeSize * j), (screenY) - (runeSize / 2) - (runeSize * i), runeSize);
       }
     }
+    status = "ON";
   }
 
 
@@ -49,24 +51,99 @@ class DemoGameScene implements Scene
   //Draw the playing area, player + enemy health-bars, and all of the runes to the screen
   void drawScene(long diff) //Diff represents the amount of time that has passed since the previous frame, and is used to control the speed of moving objects to make everything move smoothly
   {
-    clear(); 
-    background(255, 255, 255); 
-    if (nextRune == true) //Generates the next rune if necessary
+    if(status.equals("ON"))
     {
-      generateRune();
-    } 
-    checkCollisions(); 
-    currentRune.drawRune();
-    //println("Current rune x = " + currentRune.x + ", Current rune y = " + currentRune.y); 
-    drawRuneGrid();
-    //1. Draw enemy and player 
-    Main.p.drawPlayer();
-    //2. Draw enemy + player health bars
-    //health bars should change size and color based on health
-    //3. Draw energy bar 
-    //attacking reduces energy, clearing runes fills it
-    //4. Draw spellbox
-    //runes that don't combine dissappear, pressing attack clears spellbox + creates effects
+      clear(); 
+      background(255, 255, 255); 
+      if (nextRune == true) //Generates the next rune if necessary
+      {
+        generateRune();
+      } 
+      checkCollisions(); 
+      currentRune.drawRune();
+      //println("Current rune x = " + currentRune.x + ", Current rune y = " + currentRune.y); 
+      drawRuneGrid();
+      //1. Draw enemy and player 
+      Main.p.drawPlayer();
+      e.drawEnemy();
+      //2. Draw enemy + player health bars
+          //health bars should change size and color based on health
+      fill(0, 0, 0);
+      rect(0, 0, Main.screenX * 0.1, Main.screenY); //background for the player's health bar
+      rect(Main.screenX * 0.9, 0, Main.screenX * 0.1, Main.screenY); //background for the enemy's health bar
+      //Get color and size information for the player's health bar
+      float healthRatio = Main.p.health / Main.p.maxHealth;
+      float playerGreen = 255;
+      if(healthRatio < 0.5)
+      {
+         playerGreen = 255 * (healthRatio * 2);
+      }
+      float playerRed = 255;
+      if(healthRatio > 0.5)
+      {
+         playerRed = 255 - 255 * ((healthRatio - 0.5) * 2);
+      }
+      //Get color and size information for the enemy's health bar
+      float enemyHealthRatio = e.health / e.maxHealth;
+      float enemyGreen = 255;
+      if(enemyHealthRatio < 0.5)
+      {
+         enemyGreen = 255 * (enemyHealthRatio * 2);
+      }
+      float enemyRed = 255;
+      if(enemyHealthRatio > 0.5)
+      {
+         enemyRed = 255 - 255 * ((enemyHealthRatio - 0.5) * 2);
+      }
+      //println("playerRed = " + playerRed + ", playerGreen = " + playerGreen, ", health percentage = " + healthRatio);
+      fill(playerRed, playerGreen, 0);
+      rect(0, 0, Main.screenX * 0.1, Main.screenY * healthRatio, Main.screenX * 0.05); //Player's health bar
+      fill(enemyRed, enemyGreen, 0);
+      rect(Main.screenX * 0.9, 0, Main.screenX * 0.1, Main.screenY * enemyHealthRatio, Main.screenX * 0.05);
+      //3. Draw energy bar 
+      //attacking reduces energy, clearing runes fills it
+      fill(0,0,0); //background for the energy bar 
+      rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1, gridRightEdge - gridLeftEdge, Main.screenX * 0.1); 
+      fill(200, 200, 255); //draw the energy bar
+      rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1, (gridRightEdge - gridLeftEdge) * (Main.p.energy / Main.p.maxEnergy), Main.screenX * 0.1, Main.screenX * 0.05);
+      //4. Draw spellbox
+      noFill();
+      rect(gridLeftEdge + (runeSize * start), Main.screenY - (runeSize * boxHeight), runeSize * boxWidth, runeSize * boxHeight);
+      if(e.health <= 0)
+      {
+         status = "WIN"; 
+      }
+      if(Main.p.health <= 0)
+      {
+         status = "LOSE"; 
+      }
+      //runes that don't combine dissappear, pressing attack clears spellbox + creates effects
+    }
+    else if(status.equals("PAUSED"))
+    {
+      fill(0, 0, 0, 100);
+      rect(0, 0, Main.screenX, Main.screenY);
+      fill(255, 255, 255); 
+      textSize(30);
+      text("PAUSED", Main.screenX * 0.5, Main.screenY * 0.5);
+    }
+    else if(status.equals("WIN"))
+    {
+      fill(0, 0, 0, 100);
+      rect(0, 0, Main.screenX, Main.screenY);
+      fill(255, 255, 255); 
+      textSize(30);
+      text("YOU WIN", Main.screenX * 0.5, Main.screenY * 0.5);
+    }
+    else if(status.equals("LOSE"))
+    {
+      fill(0, 0, 0, 100);
+      rect(0, 0, Main.screenX, Main.screenY);
+      fill(255, 255, 255); 
+      textSize(30);
+      text("YOU LOSE", Main.screenX * 0.5, Main.screenY * 0.5); 
+    }
+    //println(status);
   }
 
 
@@ -82,19 +159,19 @@ class DemoGameScene implements Scene
     if (label.equals("Fire"))
     {
       currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge, (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);  
-      println("Created a new Fire Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
+      //println("Created a new Fire Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
     } else if (label.equals("Heal"))
     {
       currentRune = new HealRune("Heal", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge, (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
-      println("Created a new Healing Rune. X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
+      //println("Created a new Healing Rune. X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
     } else if (label.equals("Slash"))
     {
       currentRune = new SlashRune("Slash", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge, (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
-      println("Created a new Slash Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
+      //println("Created a new Slash Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
     } else
     {
       currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0) + gridLeftEdge, (screenY) - (runeSize / 2.0) - (runeSize * (gridSize - 1)), runeSize);
-      println("Label not recognized =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
+      //println("Label not recognized =" + Main.screenX * 0.5 + ", y = 0.0, size = " + runeSize);
     }
     currentRune.speedY = 1; 
     nextRune = false;
@@ -138,7 +215,7 @@ class DemoGameScene implements Scene
         break;
       }
     }
-    println("SquareX = " + squareX + ", SquareY = " + squareY + " X = " + currentRune.x + ", Y = " + currentRune.y + ", floor = " + floor + ", leftEdge = " + leftEdge); 
+    //println("SquareX = " + squareX + ", SquareY = " + squareY + " X = " + currentRune.x + ", Y = " + currentRune.y + ", floor = " + floor + ", leftEdge = " + leftEdge); 
     //Prevents the rune from going any lower than the bottom of the screen. If rune gets that far, add it to the grid and create new rune
     if ((currentRune.y + (currentRune.size / 2) + currentRune.speedY) >= floor) 
     {
@@ -177,7 +254,10 @@ class DemoGameScene implements Scene
     //first, check for vertical and horizontal chains. removing a chain may create a new one, so loop until no new chains are created
     while (runesCleared)
     {  
-      runesCleared = (checkVertical() && checkHorizontal());
+      runesCleared = false;
+      boolean vert = checkVertical();
+      boolean horiz = checkHorizontal();
+      if((vert == true) || (horiz == true)) runesCleared = true;
     }
     //next, check the upper two rows. Runes here will damage the player
     checkUpperRows();
@@ -347,7 +427,6 @@ class DemoGameScene implements Scene
 
 
 
-
   //This function returns the type of the first rune found in the spellBox
   String getSpellType()
   {
@@ -382,7 +461,57 @@ class DemoGameScene implements Scene
     }
   }
 
-
+  void castSpell()
+  {
+     String type = getSpellType();
+     int count = getSpellCount(type);
+     if((count == 1) && (Main.p.energy >= 5))
+     {
+        if(type.equals("Fire"))
+        {
+           e.burnNum += 2; 
+           Main.p.energy -= 5;
+        }
+        else if(type.equals("Slash"))
+        {
+           e.health -= 10;
+           Main.p.energy -= 5;
+        }
+        else if(type.equals("Heal"))
+        {
+           Main.p.health += 10;
+           if(Main.p.health > Main.p.maxHealth)
+           {
+              Main.p.health = Main.p.maxHealth; 
+           }
+           Main.p.energy -= 5;
+        }
+        clearSpellBox();
+     }
+     else if((count == 2) && (Main.p.energy >= 8))
+     {
+        if(type.equals("Fire"))
+        {
+           e.burnNum += 5; 
+           Main.p.energy -= 8;
+        }
+        else if(type.equals("Slash"))
+        {
+           e.health -= 25;
+           Main.p.energy -= 8;
+        }
+        else if(type.equals("Heal"))
+        {
+           Main.p.health += 25;
+           if(Main.p.health > Main.p.maxHealth)
+           {
+              Main.p.health = Main.p.maxHealth; 
+           }
+           Main.p.energy -= 8;
+        } 
+        clearSpellBox(); 
+     }
+  }
 
 
 
@@ -439,6 +568,21 @@ class DemoGameScene implements Scene
       {
         currentRune.speedY = 3;
       }
+    }
+    else if(key == ' ')
+    {
+       castSpell(); 
+    }
+    else if((key == 'p') || (key == 'P'))
+    {
+       if(status.equals("ON"))
+       {
+          status = "PAUSED";
+       }
+       else if(status.equals("PAUSED"))
+       {
+         status = "ON";
+       }
     }
   }
 
