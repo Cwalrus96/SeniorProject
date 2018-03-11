@@ -22,6 +22,7 @@ class DemoGameScene implements Scene
   int start = ((gridSize - boxWidth) / 2);
   int end = start + boxWidth;
   String status; //Keeps track of the current state of the program. Possible states are - ON, PAUSED, WIN, and LOSE
+  ArrayList<Animation> animations;  //This will keep track of all the animations currently going on the screen
 
 
 
@@ -33,6 +34,7 @@ class DemoGameScene implements Scene
     p = new Player(); 
     e = new Enemy(); 
     r = new Rune[gridSize][gridSize];
+    animations = new ArrayList<Animation>(); 
     for (int i = 0; i < gridSize; i++) 
     {
       for (int j = 0; j < gridSize; j++)
@@ -51,7 +53,7 @@ class DemoGameScene implements Scene
   //Draw the playing area, player + enemy health-bars, and all of the runes to the screen
   void drawScene(long diff) //Diff represents the amount of time that has passed since the previous frame, and is used to control the speed of moving objects to make everything move smoothly
   {
-    if(status.equals("ON"))
+    if (status.equals("ON"))
     {
       clear(); 
       background(255, 255, 255); 
@@ -67,83 +69,142 @@ class DemoGameScene implements Scene
       Main.p.drawPlayer();
       e.drawEnemy();
       //2. Draw enemy + player health bars
-          //health bars should change size and color based on health
-      fill(0, 0, 0);
-      rect(0, 0, Main.screenX * 0.1, Main.screenY); //background for the player's health bar
-      rect(Main.screenX * 0.9, 0, Main.screenX * 0.1, Main.screenY); //background for the enemy's health bar
-      //Get color and size information for the player's health bar
-      float healthRatio = Main.p.health / Main.p.maxHealth;
-      float playerGreen = 255;
-      if(healthRatio < 0.5)
+      //health bars should change size and color based on health
+      drawHealthBars(); 
+      if (e.health <= 0)
       {
-         playerGreen = 255 * (healthRatio * 2);
+        status = "WIN";
       }
-      float playerRed = 255;
-      if(healthRatio > 0.5)
+      if (Main.p.health <= 0)
       {
-         playerRed = 255 - 255 * ((healthRatio - 0.5) * 2);
+        status = "LOSE";
       }
-      //Get color and size information for the enemy's health bar
-      float enemyHealthRatio = e.health / e.maxHealth;
-      float enemyGreen = 255;
-      if(enemyHealthRatio < 0.5)
-      {
-         enemyGreen = 255 * (enemyHealthRatio * 2);
-      }
-      float enemyRed = 255;
-      if(enemyHealthRatio > 0.5)
-      {
-         enemyRed = 255 - 255 * ((enemyHealthRatio - 0.5) * 2);
-      }
-      //println("playerRed = " + playerRed + ", playerGreen = " + playerGreen, ", health percentage = " + healthRatio);
-      fill(playerRed, playerGreen, 0);
-      rect(0, 0, Main.screenX * 0.1, Main.screenY * healthRatio, Main.screenX * 0.05); //Player's health bar
-      fill(enemyRed, enemyGreen, 0);
-      rect(Main.screenX * 0.9, 0, Main.screenX * 0.1, Main.screenY * enemyHealthRatio, Main.screenX * 0.05);
-      //3. Draw energy bar 
-      //attacking reduces energy, clearing runes fills it
-      fill(0,0,0); //background for the energy bar 
-      rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1, gridRightEdge - gridLeftEdge, Main.screenX * 0.1); 
-      fill(200, 200, 255); //draw the energy bar
-      rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1, (gridRightEdge - gridLeftEdge) * (Main.p.energy / Main.p.maxEnergy), Main.screenX * 0.1, Main.screenX * 0.05);
-      //4. Draw spellbox
-      noFill();
-      rect(gridLeftEdge + (runeSize * start), Main.screenY - (runeSize * boxHeight), runeSize * boxWidth, runeSize * boxHeight);
-      if(e.health <= 0)
-      {
-         status = "WIN"; 
-      }
-      if(Main.p.health <= 0)
-      {
-         status = "LOSE"; 
-      }
+      animateAll(diff);
       //runes that don't combine dissappear, pressing attack clears spellbox + creates effects
-    }
-    else if(status.equals("PAUSED"))
+    } else if (status.equals("PAUSED"))
     {
       fill(0, 0, 0, 100);
       rect(0, 0, Main.screenX, Main.screenY);
       fill(255, 255, 255); 
       textSize(30);
       text("PAUSED", Main.screenX * 0.5, Main.screenY * 0.5);
-    }
-    else if(status.equals("WIN"))
+    } else if (status.equals("WIN"))
     {
-      fill(0, 0, 0, 100);
-      rect(0, 0, Main.screenX, Main.screenY);
-      fill(255, 255, 255); 
-      textSize(30);
-      text("YOU WIN", Main.screenX * 0.5, Main.screenY * 0.5);
-    }
-    else if(status.equals("LOSE"))
+      drawWin(); 
+    } else if (status.equals("LOSE"))
     {
-      fill(0, 0, 0, 100);
-      rect(0, 0, Main.screenX, Main.screenY);
-      fill(255, 255, 255); 
-      textSize(30);
-      text("YOU LOSE", Main.screenX * 0.5, Main.screenY * 0.5); 
+      drawLose(); 
     }
     //println(status);
+  }
+  
+  //This function is called to run through all animations currently happening in the scene
+  void animateAll(long diff)
+  {
+    ArrayList<Animation> toRemove = new ArrayList<Animation>(); 
+    for(Animation a: animations) 
+    {
+       boolean keep = a.animate(diff); 
+       if(keep == false) 
+       {
+          toRemove.add(a);   
+       }
+    }
+    animations.removeAll(toRemove); 
+  }
+  
+  //This function is called when the state is "WIN"
+  void drawWin()
+  {
+      fill(0, 0, 0, 100);
+      rect(0, 0, Main.screenX, Main.screenY);
+      fill(255, 255, 255); 
+      textSize(30);
+      text("YOU WIN", Main.screenX * 0.5, Main.screenY * 0.33);
+      fill(100, 200, 100); 
+      rect(Main.screenX * 0.25, Main.screenY * 0.4, Main.screenX * 0.5, Main.screenY * 0.2, Main.screenY * 0.01); 
+      fill(255, 255, 255);
+      textAlign(CENTER); 
+      textSize(35); 
+      text("Play Again", Main.screenX * 0.5, Main.screenY * 0.5);
+      fill(255, 255, 150); 
+      rect(Main.screenX * 0.25, Main.screenY * 0.66, Main.screenX * 0.5, Main.screenY * 0.2, Main.screenY * 0.01); 
+      fill(255, 255, 255);
+      textAlign(CENTER); 
+      textSize(35); 
+      text("Main Menu", Main.screenX * 0.5, Main.screenY * 0.76); 
+  }
+  
+  
+  //This function is called when the state is "LOSE"
+  void drawLose()
+  {
+    fill(0, 0, 0, 100);
+      rect(0, 0, Main.screenX, Main.screenY);
+      fill(255, 255, 255); 
+      textSize(30);
+      text("YOU LOSE", Main.screenX * 0.5, Main.screenY * 0.33);
+      fill(255, 200, 100); 
+      rect(Main.screenX * 0.25, Main.screenY * 0.4, Main.screenX * 0.5, Main.screenY * 0.2, Main.screenY * 0.01); 
+      fill(255, 255, 255);
+      textAlign(CENTER); 
+      textSize(35); 
+      text("Play Again", Main.screenX * 0.5, Main.screenY * 0.5);
+      fill(255, 255, 150); 
+      rect(Main.screenX * 0.25, Main.screenY * 0.66, Main.screenX * 0.5, Main.screenY * 0.2, Main.screenY * 0.01); 
+      fill(255, 255, 255);
+      textAlign(CENTER); 
+      textSize(35); 
+      text("Main Menu", Main.screenX * 0.5, Main.screenY * 0.76);
+  }
+
+
+
+
+
+  void drawHealthBars()
+  {
+    fill(0, 0, 0);
+    rect(0, 0, Main.screenX * 0.1, Main.screenY); //background for the player's health bar
+    rect(Main.screenX * 0.9, 0, Main.screenX * 0.1, Main.screenY); //background for the enemy's health bar
+    //Get color and size information for the player's health bar
+    float healthRatio = Main.p.health / Main.p.maxHealth;
+    float playerGreen = 255;
+    if (healthRatio < 0.5)
+    {
+      playerGreen = 255 * (healthRatio * 2);
+    }
+    float playerRed = 255;
+    if (healthRatio > 0.5)
+    {
+      playerRed = 255 - 255 * ((healthRatio - 0.5) * 2);
+    }
+    //Get color and size information for the enemy's health bar
+    float enemyHealthRatio = e.health / e.maxHealth;
+    float enemyGreen = 255;
+    if (enemyHealthRatio < 0.5)
+    {
+      enemyGreen = 255 * (enemyHealthRatio * 2);
+    }
+    float enemyRed = 255;
+    if (enemyHealthRatio > 0.5)
+    {
+      enemyRed = 255 - 255 * ((enemyHealthRatio - 0.5) * 2);
+    }
+    //println("playerRed = " + playerRed + ", playerGreen = " + playerGreen, ", health percentage = " + healthRatio);
+    fill(playerRed, playerGreen, 0);
+    rect(0, 0, Main.screenX * 0.1, Main.screenY * healthRatio, Main.screenX * 0.05); //Player's health bar
+    fill(enemyRed, enemyGreen, 0);
+    rect(Main.screenX * 0.9, 0, Main.screenX * 0.1, Main.screenY * enemyHealthRatio, Main.screenX * 0.05);
+    //3. Draw energy bar 
+    //attacking reduces energy, clearing runes fills it
+    fill(0, 0, 0); //background for the energy bar 
+    rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1, gridRightEdge - gridLeftEdge, Main.screenX * 0.1); 
+    fill(200, 200, 255); //draw the energy bar
+    rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1, (gridRightEdge - gridLeftEdge) * (Main.p.energy / Main.p.maxEnergy), Main.screenX * 0.1, Main.screenX * 0.05);
+    //4. Draw spellbox
+    noFill();
+    rect(gridLeftEdge + (runeSize * start), Main.screenY - (runeSize * boxHeight), runeSize * boxWidth, runeSize * boxHeight);
   }
 
 
@@ -257,7 +318,7 @@ class DemoGameScene implements Scene
       runesCleared = false;
       boolean vert = checkVertical();
       boolean horiz = checkHorizontal();
-      if((vert == true) || (horiz == true)) runesCleared = true;
+      if ((vert == true) || (horiz == true)) runesCleared = true;
     }
     //next, check the upper two rows. Runes here will damage the player
     checkUpperRows();
@@ -296,7 +357,8 @@ class DemoGameScene implements Scene
             for (int l = k; l < gridSize - 1; l++)
             {
               r[l - chain][j] = r[l][j]; //Drop the runes down to fill in the missing space
-              r[l - chain][j].y += runeSize * chain; 
+              animations.add(new RuneAnimation(r[l - chain][j], r[l - chain][j].x, r[l - chain][j].y, 0, 1, 0, r[l - chain][j].y + runeSize * chain)); 
+              //r[l - chain][j].y += runeSize * chain; 
               //replace the missing rune
               r[l][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0) + (runeSize * j), (screenY) - (runeSize / 2) - (runeSize * l), runeSize);
             }
@@ -343,6 +405,7 @@ class DemoGameScene implements Scene
               for (int m = i; m < gridSize - 1; m++) //Go up to gridSize - 2 because the upper rows of the grid should remain empty
               {
                 r[m][l] = r[m + 1][l]; //Replaces the selected rune with the rune above it
+                animations.add(new RuneAnimation(r[m][l], r[m][l].x, r[m][l].y, 0, 1, 0, r[m][l].y + runeSize)); 
                 r[m][l].y += runeSize;
                 //Replace the removed rune with a null rune 
                 r[m + 1][l] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0) + (runeSize * l), (screenY) - (runeSize / 2) - (runeSize * (m + 1)), runeSize);
@@ -463,54 +526,49 @@ class DemoGameScene implements Scene
 
   void castSpell()
   {
-     String type = getSpellType();
-     int count = getSpellCount(type);
-     if((count == 1) && (Main.p.energy >= 5))
-     {
-        if(type.equals("Fire"))
+    String type = getSpellType();
+    int count = getSpellCount(type);
+    if ((count == 1) && (Main.p.energy >= 5))
+    {
+      if (type.equals("Fire"))
+      {
+        e.burnNum += 2; 
+        Main.p.energy -= 5;
+      } else if (type.equals("Slash"))
+      {
+        e.health -= 10;
+        Main.p.energy -= 5;
+      } else if (type.equals("Heal"))
+      {
+        Main.p.health += 10;
+        if (Main.p.health > Main.p.maxHealth)
         {
-           e.burnNum += 2; 
-           Main.p.energy -= 5;
+          Main.p.health = Main.p.maxHealth;
         }
-        else if(type.equals("Slash"))
+        Main.p.energy -= 5;
+      }
+      clearSpellBox();
+    } else if ((count == 2) && (Main.p.energy >= 8))
+    {
+      if (type.equals("Fire"))
+      {
+        e.burnNum += 5; 
+        Main.p.energy -= 8;
+      } else if (type.equals("Slash"))
+      {
+        e.health -= 25;
+        Main.p.energy -= 8;
+      } else if (type.equals("Heal"))
+      {
+        Main.p.health += 25;
+        if (Main.p.health > Main.p.maxHealth)
         {
-           e.health -= 10;
-           Main.p.energy -= 5;
+          Main.p.health = Main.p.maxHealth;
         }
-        else if(type.equals("Heal"))
-        {
-           Main.p.health += 10;
-           if(Main.p.health > Main.p.maxHealth)
-           {
-              Main.p.health = Main.p.maxHealth; 
-           }
-           Main.p.energy -= 5;
-        }
-        clearSpellBox();
-     }
-     else if((count == 2) && (Main.p.energy >= 8))
-     {
-        if(type.equals("Fire"))
-        {
-           e.burnNum += 5; 
-           Main.p.energy -= 8;
-        }
-        else if(type.equals("Slash"))
-        {
-           e.health -= 25;
-           Main.p.energy -= 8;
-        }
-        else if(type.equals("Heal"))
-        {
-           Main.p.health += 25;
-           if(Main.p.health > Main.p.maxHealth)
-           {
-              Main.p.health = Main.p.maxHealth; 
-           }
-           Main.p.energy -= 8;
-        } 
-        clearSpellBox(); 
-     }
+        Main.p.energy -= 8;
+      } 
+      clearSpellBox();
+    }
   }
 
 
@@ -527,10 +585,38 @@ class DemoGameScene implements Scene
     }
   }
 
+
+
+  char mouseOverButton()
+  {
+    if (((mouseX > Main.screenX * 0.25) && (mouseX < Main.screenX * 0.75)) && ((mouseY > Main.screenY * 0.4) && (mouseY < Main.screenY * 0.6)))
+    {
+      return 'r';
+    }
+    else if(((mouseX > Main.screenX * 0.25) && (mouseX < Main.screenX * 0.75)) && ((mouseY > Main.screenY * 0.66) && (mouseY < Main.screenY * 0.86)))
+    {
+       return 'm'; 
+    }
+    
+    else return ' ';
+  }
+
+
   //This function can be used to check if the user pressed any of the on-screen controls (to be implemented later).  
   void mouseClicked()
   {
-    return;
+    if(status.equals("LOSE") || status.equals("WIN"))
+    {
+      char button = mouseOverButton();
+      if(button == 'r')
+      {
+         Main.s = new DemoGameScene(); 
+      }
+      else if(button == 'm')
+      {
+         Main.s = new StartMenu(); 
+      }
+    }
   }
 
   //This function has two main uses - to see if the user is dragging current gem, and to see if the user dragged up for an attack
@@ -568,21 +654,18 @@ class DemoGameScene implements Scene
       {
         currentRune.speedY = 3;
       }
-    }
-    else if(key == ' ')
+    } else if (key == ' ')
     {
-       castSpell(); 
-    }
-    else if((key == 'p') || (key == 'P'))
+      castSpell();
+    } else if ((key == 'p') || (key == 'P'))
     {
-       if(status.equals("ON"))
-       {
-          status = "PAUSED";
-       }
-       else if(status.equals("PAUSED"))
-       {
-         status = "ON";
-       }
+      if (status.equals("ON"))
+      {
+        status = "PAUSED";
+      } else if (status.equals("PAUSED"))
+      {
+        status = "ON";
+      }
     }
   }
 
