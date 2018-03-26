@@ -35,6 +35,7 @@ class DemoGameScene implements Scene
     e = new Enemy(); 
     r = new Rune[gridSize][gridSize];
     animations = new ArrayList<Animation>(); 
+    animations.add(new SpriteAnimation(32 * 9, 32,  Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png"));  //<>//
     for (int i = 0; i < gridSize; i++) 
     {
       for (int j = 0; j < gridSize; j++)
@@ -66,7 +67,7 @@ class DemoGameScene implements Scene
       //println("Current rune x = " + currentRune.x + ", Current rune y = " + currentRune.y); 
       drawRuneGrid();
       //1. Draw enemy and player 
-      Main.p.drawPlayer();
+      //Main.p.drawPlayer();
       e.drawEnemy();
       //2. Draw enemy + player health bars
       //health bars should change size and color based on health
