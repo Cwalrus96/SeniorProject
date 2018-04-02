@@ -4,6 +4,7 @@ class Player
   //TODO: Expand player - allow customization, keep track of unlocked skills and abilities, 
   //Track stats, experience, level, appearance, inventory, equipment, etc. 
   
+  String name; 
   float maxHealth; //Keeps track of the player's maximum health value
   float health; //Tracks the player's health value
   float maxEnergy; //Keeps track of the player's maximum energy value
@@ -12,7 +13,7 @@ class Player
   float y; //represents the y position of the player's bottom left corner
   ArrayList<String> unlockedRunes; //Keeps track of what runes the player currently has available
   
-  Player()
+  Player() //Used to create a null or default character
   {
      maxHealth = 100.0;
      health = maxHealth;
@@ -24,7 +25,25 @@ class Player
      unlockedRunes.add("Heal"); 
      x = Main.screenX * 0.2;
      y = Main.screenY - Main.screenX;
+     name = "NULL"; 
   }
+  
+  Player(String name) //Used to create a default character with the given name 
+  {
+     maxHealth = 100.0;
+     health = maxHealth;
+     maxEnergy = 50; 
+     energy = maxEnergy;
+     unlockedRunes = new ArrayList<String>(); 
+     unlockedRunes.add("Fire"); 
+     unlockedRunes.add("Slash"); 
+     unlockedRunes.add("Heal"); 
+     x = Main.screenX * 0.2;
+     y = Main.screenY - Main.screenX;
+     this.name = name;
+  }
+  
+  
   
   void drawPlayer()
   {

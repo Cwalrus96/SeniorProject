@@ -1,4 +1,5 @@
 class RuneAnimation extends Animation
+//TODO: Replace with Sprite animations? 
 {
   Rune r; 
   float x; 

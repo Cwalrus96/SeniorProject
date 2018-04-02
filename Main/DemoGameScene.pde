@@ -1,5 +1,11 @@
 //This scene represents the actual gameplay of the game. For now, will make simplest possible demo version. 
-
+/**TODO 
+Implement mouse controls
+Implement on-screen buttons? 
+Make "GameState" enum, and convert all state checks to use the enum
+Figure out a different way to handle attacks besides hardcoding them. Should use some combination of the player/enemy's stats 
+Replace RuneAnimation with SpriteAnimations? Also, 
+**/
 class DemoGameScene implements Scene
 {
 

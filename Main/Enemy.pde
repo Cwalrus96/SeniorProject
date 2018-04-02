@@ -1,3 +1,11 @@
+/* TODO 
+Add enemy + boss subclasses for different enemy types 
+Figure out different types of enemy attacks 
+Implement enemy animations
+Different types of enemies have different weaknesses 
+Add additional stats
+*/ 
+
 class Enemy 
 {
   float maxHealth;

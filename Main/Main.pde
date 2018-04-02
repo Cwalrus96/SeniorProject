@@ -1,12 +1,4 @@
 //1. Global Variables 
-/**TODO today: 
-Implement fps rendering (DONE)
-Implement runes
-Implement rune tracking in the DemoGameScene
-Implement rough DemoGameScene layout 
-Implement player + enemy health 
-Implement button + mouse controls
-**/
 
 static Scene s;  //Keeps track of the current screen 
 static float screenX = 375;   //Tracks the width of the screen

@@ -1,13 +1,13 @@
 /** This class is going to be used to draw the start menu at the beginning of the stage. 
   For now, should simply have a button that says "Start Game", which creates and loads a new game scene. 
   Will update to have other buttons which will load other scenes. 
+  TODO: Replace the "Start Game" Button with two buttons. 
+  "Load Game" will open the LoadGame scene, and is only clickable if there is at least 1 saved character 
+  "Create Character" will allow the player to create a new named character
 **/
 class StartMenu implements Scene
 {
   //Scene Variables
-  int buttonR = 255; 
-  int buttonG = 155; 
-  int buttonB = 55; 
   boolean buttonPressed = false; 
  
   //1. These functions are inherited from the Scene interface 
@@ -15,13 +15,35 @@ class StartMenu implements Scene
   {
    clear(); 
    background(255,255,255);
-   fill(buttonR, buttonG, buttonB); 
-   rect(Main.screenX * 0.25, Main.screenY * 0.4, Main.screenX * 0.5, Main.screenY * 0.2, Main.screenY * 0.01); 
+   //Write the title
+   text("Rune Battle", Main.screenX * 0.5, Main.screenY * (1.0 / 6.0)); 
+   //Two buttons - "Load Game" and "Create Character" 
+   //Both buttons change color on hover 
+   //Load game is on top, greyed out unless there is at least one character file 
+     //Load Game button
+     //Check if the mouse is over the button
+   if(((mouseX > Main.screenX * 0.1) && (mouseX < Main.screenX * 0.9)) && ((mouseY > Main.screenY * ((1.0 / 3.0) + 0.05)) && (mouseY < Main.screenY * ((2.0 / 3.0) - 0.05)))) 
+   {
+      fill(100);  
+   }
+   else
+   {
+      fill(155);
+   }
+   
+   rect(Main.screenX * 0.1, Main.screenY * ((1.0 / 3.0) + 0.05), Main.screenX * 0.8, Main.screenY * ((1.0 / 3.0) - 0.1), Main.screenY * 0.05); 
    fill(0,0,0);
-   textAlign(CENTER); 
+   textAlign(CENTER, CENTER); 
    textSize(35); 
-   text("Start Game", Main.screenX * 0.5, Main.screenY * 0.5); 
-   text("Rune Battle", Main.screenX * 0.5, Main.screenY * 0.2); 
+   text("Load Game", Main.screenX * 0.5, Main.screenY * 0.5); 
+     //Create Character Button
+   fill(155);
+   rect(Main.screenX * 0.1, Main.screenY * ((2.0 / 3.0) + 0.05), Main.screenX * 0.8, Main.screenY * ((1.0 / 3.0) - 0.1), Main.screenY * 0.05); 
+   fill(0,0,0);
+   textAlign(CENTER, CENTER); 
+   textSize(35); 
+   text("Create \n Character", Main.screenX * 0.5, Main.screenY * (0.5 + (1.0 / 3.0))); 
+   
   }
   
   //2. These functions will be called by the main function if the appropriate event occurs
@@ -45,9 +67,6 @@ class StartMenu implements Scene
   {
        if(mouseOverButton())
        {
-          buttonR = 204; 
-          buttonG = 102; 
-          buttonB = 0; 
           buttonPressed = true; 
        }
   }
@@ -56,10 +75,7 @@ class StartMenu implements Scene
   void mouseReleased()
   {
       if(buttonPressed)
-      {
-        buttonR = 255; 
-        buttonG = 155; 
-        buttonB = 55; 
+      { 
         buttonPressed = false; 
       }
   }
