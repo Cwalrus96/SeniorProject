@@ -35,7 +35,7 @@ class DemoGameScene implements Scene
     e = new Enemy(); 
     r = new Rune[gridSize][gridSize];
     animations = new ArrayList<Animation>(); 
-    animations.add(new SpriteAnimation(32 * 9, 32,  Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png"));  //<>//
+    animations.add(new SpriteAnimation(32 * 9, 32,  Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png")); 
     for (int i = 0; i < gridSize; i++) 
     {
       for (int j = 0; j < gridSize; j++)
@@ -128,7 +128,7 @@ class DemoGameScene implements Scene
       textAlign(CENTER); 
       textSize(35); 
       text("Play Again", Main.screenX * 0.5, Main.screenY * 0.5);
-      fill(255, 255, 150); 
+      fill(230, 230, 90); 
       rect(Main.screenX * 0.25, Main.screenY * 0.66, Main.screenX * 0.5, Main.screenY * 0.2, Main.screenY * 0.01); 
       fill(255, 255, 255);
       textAlign(CENTER); 
@@ -151,7 +151,7 @@ class DemoGameScene implements Scene
       textAlign(CENTER); 
       textSize(35); 
       text("Play Again", Main.screenX * 0.5, Main.screenY * 0.5);
-      fill(255, 255, 150); 
+      fill(230, 230, 90); 
       rect(Main.screenX * 0.25, Main.screenY * 0.66, Main.screenX * 0.5, Main.screenY * 0.2, Main.screenY * 0.01); 
       fill(255, 255, 255);
       textAlign(CENTER); 
