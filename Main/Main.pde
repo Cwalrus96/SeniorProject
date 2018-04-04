@@ -12,39 +12,37 @@ int frameLength; //This variable holds the desired amount of time between frames
 static Player p; //Holds information about the current player. For now, simply create a blank player. In the future, player information will be loaded from a save file 
 
 
-
 //3. This function will be called once to set up the scene 
 void setup() 
 {
   /**a. Set the size. This size was chosen because it is the same aspect ratio as an Iphone screen, but at a slightly lower resolution. 
-  The box appears on my screen as about the same size as an actual Iphone screen, which will allow me to test if the game works well on that sized screen. 
-  TODO: Implement function to adjust display based on size and resolution of the screen, while maintaining aspect ratio 
-  **/
+   The box appears on my screen as about the same size as an actual Iphone screen, which will allow me to test if the game works well on that sized screen. 
+   TODO: Implement function to adjust display based on size and resolution of the screen, while maintaining aspect ratio 
+   **/
   size(375, 667); 
   //b. Initialize Global Variables 
-    //i. The first scene should always be the start menu
-    s = new StartMenu(); 
-    p = new Player();
-    //These variables will be used to track time and keep the game running at the target frames per second
-    oldT = millis(); 
-    newT = oldT; 
-    frameLength = 1000 / targetFPS;
-   
+  //i. The first scene should always be the start menu
+  s = new StartMenu(); 
+  p = new Player();
+  //These variables will be used to track time and keep the game running at the target frames per second
+  oldT = millis(); 
+  newT = oldT; 
+  frameLength = 1000 / targetFPS;
 }
 
 void draw() //This function draws everything to the screen. For the most part, will simply draw the current scene. Has potential for some debugging information 
 {
   newT = millis(); 
   diff = newT - oldT; //Only draws the scene if enough time has passed 
-  if(diff > frameLength)
+  if (diff > frameLength)
   {
     s.drawScene(diff); 
-    if(debug) //If the debug flag is set, draws additional information to the screen 
+    if (debug) //If the debug flag is set, draws additional information to the screen 
     {
-       textAlign(LEFT); 
-       textSize(screenY * 0.03); 
-       text("MouseX = " + mouseX, 0, screenY * 0.05);
-       text("MouseY = " + mouseY, 0, screenY * 0.1); 
+      textAlign(LEFT); 
+      textSize(screenY * 0.03); 
+      text("MouseX = " + mouseX, 0, screenY * 0.05);
+      text("MouseY = " + mouseY, 0, screenY * 0.1);
     }
   }
 }
@@ -53,30 +51,30 @@ void draw() //This function draws everything to the screen. For the most part, w
 
 void mouseClicked() 
 {
-  s.mouseClicked(); 
+  s.mouseClicked();
 }
 
 void mousePressed()
 {
-   s.mousePressed();  
+  s.mousePressed();
 }
 
 void mouseReleased()
 {
-   s.mouseReleased();  
+  s.mouseReleased();
 }
 
 void mouseDragged()
 {
-   s.mouseDragged();
+  s.mouseDragged();
 }
 
 void keyPressed()
 {
-  s.keyPressed(); 
+  s.keyPressed();
 }
 
 void keyReleased()
 {
-   s.keyReleased();  
+  s.keyReleased();
 }
