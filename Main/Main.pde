@@ -47,6 +47,43 @@ void draw() //This function draws everything to the screen. For the most part, w
   }
 }
 
+void savePlayer() //This function is used to save the player to a file
+{
+  if (Main.p != null)
+  {
+    File listFile = new File("/Data/Characters.txt"); 
+    File characterFile = new File(p.name + ".json");
+    JSONObject savePlayer = new JSONObject(); 
+    savePlayer.setString("name", p.name); 
+    savePlayer.setFloat("maxHealth", p.maxHealth); 
+    savePlayer.setFloat("health", p.health); 
+    savePlayer.setFloat("maxEnergy", p.maxEnergy); 
+    savePlayer.setFloat("energy", p.energy);
+    savePlayer.setFloat("x", p.x); 
+    savePlayer.setFloat("y", p.y); 
+    JSONArray unlockedRunes = new JSONArray(); 
+    int i = 0; 
+    for(String r : p.unlockedRunes)
+    {
+        JSONObject rune = new JSONObject(); 
+        rune.setString("unlocked", r); 
+        unlockedRunes.setJSONObject(i, rune); 
+        i++; 
+    }
+    if (!listFile.isFile()) //if listFile doesn't exist create it, add the character's name, and create a file for the character 
+    {
+      PrintWriter writeList = createWriter(listFile); 
+      writeList.println(p.name); 
+      writeList.flush(); 
+      writeList.close(); 
+      PrintWriter writeCharacter = createWriter(characterFile);
+      saveJSONObject(savePlayer, p.name + ".json"); 
+      writeCharacter.flush();
+      writeCharacter.close(); 
+    }
+  }
+}
+
 //For all input event functions, simply call the corresponding function in the current scene
 
 void mouseClicked() 

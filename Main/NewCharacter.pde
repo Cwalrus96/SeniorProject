@@ -11,6 +11,8 @@ class NewCharacter implements Scene
   color backHover = color(200, 55, 55); 
   color buttonText = 0; 
   color grayedText = 100;
+  File f = new File("/Data/Characters.txt");
+  
 
   void drawScene(long diff)
   {
@@ -61,13 +63,33 @@ class NewCharacter implements Scene
     fill(buttonText);
     textAlign(CENTER, CENTER); 
     textSize(35); 
-    text("Create \n Character", Main.screenX * 0.5, Main.screenY * (0.5 + (1.0 / 3.0)));
+    text("Back to Menu", Main.screenX * 0.5, Main.screenY * (0.5 + (1.0 / 3.0)));
   }
 
   //These are system functions that every scene must implement 
   void mouseClicked()
   {
-    return;
+     //Check if mouse is over "Create Character"
+     if ((new String(text).trim().length() > 0) && ((mouseX > Main.screenX * 0.1) && (mouseX < Main.screenX * 0.9)) && ((mouseY > Main.screenY * ((1.0 / 3.0) + 0.05)) && (mouseY < Main.screenY * ((2.0 / 3.0) - 0.05))))
+     {
+       //Check if a file with that character name already exists, and if so print a message asking to change the name
+       if(f.isFile() && (match(join(loadStrings(f), ' '), new String(text)) == null))
+       {
+         println("Cannot create character with that name"); 
+       }
+       //if character does not already exist, create new default character and save it to a new file with the given name. 
+       //Also, add name to characters list file
+       else 
+       {
+         Main.p = new Player(new String(text)); 
+         savePlayer(); 
+       }
+     }
+     //Check if mouse is over the "Back" button
+     else if (((mouseX > Main.screenX * 0.1) && (mouseX < Main.screenX * 0.9)) && ((mouseY > Main.screenY * ((2.0 / 3.0) + 0.05)) && (mouseY < Main.screenY - 0.05)))
+     {
+       Main.s = new StartMenu(); 
+     }
   }
 
   void mouseDragged()
