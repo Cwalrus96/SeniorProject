@@ -51,8 +51,8 @@ void savePlayer() //This function is used to save the player to a file
 {
   if (Main.p != null)
   {
-    File listFile = new File("/Data/Characters.txt"); 
-    File characterFile = new File(p.name + ".json");
+    File listFile = new File("Data/Characters.txt"); 
+    File characterFile = new File("Data/" + p.name + ".json");
     JSONObject savePlayer = new JSONObject(); 
     savePlayer.setString("name", p.name); 
     savePlayer.setFloat("maxHealth", p.maxHealth); 
@@ -65,21 +65,32 @@ void savePlayer() //This function is used to save the player to a file
     int i = 0; 
     for(String r : p.unlockedRunes)
     {
-        JSONObject rune = new JSONObject(); 
-        rune.setString("unlocked", r); 
-        unlockedRunes.setJSONObject(i, rune); 
+        unlockedRunes.setString(i, r); 
         i++; 
     }
+    savePlayer.setJSONArray("unlockedRunes", unlockedRunes); 
     if (!listFile.isFile()) //if listFile doesn't exist create it, add the character's name, and create a file for the character 
     {
+      println("list file doesn't exist"); 
       PrintWriter writeList = createWriter(listFile); 
       writeList.println(p.name); 
       writeList.flush(); 
       writeList.close(); 
       PrintWriter writeCharacter = createWriter(characterFile);
-      saveJSONObject(savePlayer, p.name + ".json"); 
+      //saveJSONObject(savePlayer, "Data/" + p.name + ".json"); 
+      writeCharacter.print(savePlayer); 
       writeCharacter.flush();
       writeCharacter.close(); 
+    }
+    else 
+    {
+      println(listFile.getAbsolutePath()); 
+      PrintWriter writeCharacter = createWriter(characterFile);
+      //saveJSONObject(savePlayer, "Data/" + p.name + ".json"); 
+      writeCharacter.print(savePlayer); 
+      writeCharacter.flush();
+      writeCharacter.close();
+      print(savePlayer); 
     }
   }
 }

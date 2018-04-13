@@ -73,7 +73,7 @@ class NewCharacter implements Scene
      if ((new String(text).trim().length() > 0) && ((mouseX > Main.screenX * 0.1) && (mouseX < Main.screenX * 0.9)) && ((mouseY > Main.screenY * ((1.0 / 3.0) + 0.05)) && (mouseY < Main.screenY * ((2.0 / 3.0) - 0.05))))
      {
        //Check if a file with that character name already exists, and if so print a message asking to change the name
-       if(f.isFile() && (match(join(loadStrings(f), ' '), new String(text)) == null))
+       if(f.isFile() && !(match(join(loadStrings(f), ' '), new String(text)) == null))
        {
          println("Cannot create character with that name"); 
        }
@@ -81,7 +81,7 @@ class NewCharacter implements Scene
        //Also, add name to characters list file
        else 
        {
-         Main.p = new Player(new String(text)); 
+         Main.p = new Player(new String(text).trim()); 
          savePlayer(); 
        }
      }

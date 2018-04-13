@@ -11,7 +11,7 @@ class LoadGame implements Scene
   
   LoadGame()
   {
-    characters = loadStrings("Characters.txt"); 
+    characters = loadStrings("Data/Characters.txt"); 
   }
   
   void drawScene(long diff)
