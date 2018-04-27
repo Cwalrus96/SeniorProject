@@ -1,6 +1,5 @@
 package scenes;
 
-import processing.core.PApplet;
 import seniorproject.Main;
 
 public abstract class Scene {

@@ -2,7 +2,7 @@ package animations;
 
 import runes.Rune;
 
-class RuneAnimation extends Animation
+public class RuneAnimation extends Animation
 //TODO: Replace with Sprite animations? 
 {
 Rune r; 
@@ -14,7 +14,7 @@ float endX;
 float endY; 
 
 
-RuneAnimation(Rune r, float x, float y, float speedX, float speedY, float endX, float endY)
+public RuneAnimation(Rune r, float x, float y, float speedX, float speedY, float endX, float endY)
 {
   this.r = r; 
   this.x = x; 

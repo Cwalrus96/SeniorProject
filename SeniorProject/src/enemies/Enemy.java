@@ -12,25 +12,27 @@ Add additional stats
 
 public class Enemy 
 {
-  float maxHealth;
-  float health; //Keeps track of the enemy's current health
+  public float maxHealth;
+  public float health; //Keeps track of the enemy's current health
   float x; //Keeps track of the x coordinate of the enemy's lower left corner
   float y; //Keeps track of the y coordinate of the enemy's lower left corner
-  int burnNum; //Keeps track of the number of burn stacks on the enemy
+  public int burnNum; //Keeps track of the number of burn stacks on the enemy
   int attackNum; //A timer that allows the enemy to attack every 5 seconds
   long oldT; 
   long newT;
+  Main main;
 
   //A basic constructor that creates a dummy enemy
-  public Enemy()
+  public Enemy(Main main)
   {
     maxHealth = 100;
     health = maxHealth;  
     x = Main.screenX * 0.4f;
     y = Main.screenY - Main.screenX;
-    newT = millis(); 
+    newT = main.millis(); 
     oldT = newT;
     attackNum = 5;
+    this.main = main;
   }
 
 
@@ -40,10 +42,10 @@ public class Enemy
   //Draws the dummy enemy to the screen
   public void drawEnemy()
   {
-    fill(155, 55, 55);
-    triangle(x + Main.screenX * 0.25f, y, x, y - (Main.screenX * 0.6f), x + (Main.screenX * 0.5f), y - (Main.screenX * 0.6f));
-    triangle(x + Main.screenX * 0.15f, y - (Main.screenX * 0.6f), x + Main.screenX * 0.35f, y - Main.screenX * 0.6f, x + Main.screenX * 0.25f, y - Main.screenX * 0.8f);
-    newT = millis();
+    main.fill(155, 55, 55);
+    main.triangle(x + Main.screenX * 0.25f, y, x, y - (Main.screenX * 0.6f), x + (Main.screenX * 0.5f), y - (Main.screenX * 0.6f));
+    main.triangle(x + Main.screenX * 0.15f, y - (Main.screenX * 0.6f), x + Main.screenX * 0.35f, y - Main.screenX * 0.6f, x + Main.screenX * 0.25f, y - Main.screenX * 0.8f);
+    newT = main.millis();
     if (newT - oldT > 1000)
     {
       oldT = newT;

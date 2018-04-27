@@ -15,7 +15,7 @@ public class SpriteAnimation extends Animation {
 	float x;
 	float y;
 
-	SpriteAnimation(float width, float height, float x, float y, int numFrames, String sheetFile, Main main) {
+	public SpriteAnimation(float width, float height, float x, float y, int numFrames, String sheetFile, Main main) {
 		this.main = main;
 		spriteWidth = width;
 		spriteHeight = height;

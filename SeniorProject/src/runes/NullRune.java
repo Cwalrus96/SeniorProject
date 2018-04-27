@@ -2,9 +2,9 @@ package runes;
 
 import seniorproject.Main;
 
-class NullRune extends Rune {
+public class NullRune extends Rune {
 
-	NullRune(String Type, float x, float y, float size, Main main) {
+	public NullRune(String Type, float x, float y, float size, Main main) {
 		super(Type, x, y, size, main);
 	}
 

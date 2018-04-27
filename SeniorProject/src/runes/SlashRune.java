@@ -3,9 +3,9 @@ package runes;
 import seniorproject.Main;
 
 //This class will be used to logically represent the skill tree
-class SlashRune extends Rune {
+public class SlashRune extends Rune {
 
-	SlashRune(String Type, float x, float y, float size, Main main) {
+	public SlashRune(String Type, float x, float y, float size, Main main) {
 		super(Type, x, y, size, main);
 	}
 

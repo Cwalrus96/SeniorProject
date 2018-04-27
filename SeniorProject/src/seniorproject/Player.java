@@ -9,13 +9,13 @@ public class Player
   //Track stats, experience, level, appearance, inventory, equipment, etc. 
   
   String name; 
-  float maxHealth; //Keeps track of the player's maximum health value
-  float health; //Tracks the player's health value
-  float maxEnergy; //Keeps track of the player's maximum energy value
-  float energy; //Tracks the player's energy value (gets reduced when player attacks, fills from clearing runes) 
-  float x; //represents the x position of the player's bottom left corner
-  float y; //represents the y position of the player's bottom left corner
-  ArrayList<String> unlockedRunes; //Keeps track of what runes the player currently has available
+  public float maxHealth; //Keeps track of the player's maximum health value
+  public float health; //Tracks the player's health value
+  public float maxEnergy; //Keeps track of the player's maximum energy value
+  public float energy; //Tracks the player's energy value (gets reduced when player attacks, fills from clearing runes) 
+  public float x; //represents the x position of the player's bottom left corner
+  public float y; //represents the y position of the player's bottom left corner
+  public ArrayList<String> unlockedRunes; //Keeps track of what runes the player currently has available
   Main main; 
   
   public Player(Main main) //Used to create a null or default character

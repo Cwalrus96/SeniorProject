@@ -2,7 +2,6 @@ package scenes;
 
 import java.io.File;
 
-import processing.core.PApplet;
 import seniorproject.Main;
 
 
@@ -58,7 +57,7 @@ public class StartMenu extends Scene
    {
      main.fill(grayedText);
    }
-   main.textAlign(main.CENTER, main.CENTER); 
+   main.textAlign(Main.CENTER, Main.CENTER); 
    main.textSize(35); 
    main.text("Load Game", Main.screenX * 0.5f, Main.screenY * 0.5f); 
    //Create Character Button
@@ -72,7 +71,7 @@ public class StartMenu extends Scene
    }
    main.rect(Main.screenX * 0.1f, Main.screenY * ((2.0f / 3.0f) + 0.05f), Main.screenX * 0.8f, Main.screenY * ((1.0f / 3.0f) - 0.1f), Main.screenY * 0.05f); 
    main.fill(buttonText);
-   main.textAlign(main.CENTER, main.CENTER); 
+   main.textAlign(Main.CENTER, Main.CENTER); 
    main.textSize(35); 
    main.text("Create \n Character", Main.screenX * 0.5f, Main.screenY * (0.5f + (1.0f / 3.0f)));
  }
@@ -84,7 +83,7 @@ public class StartMenu extends Scene
     //Check if mouse is over "Load Game Button". If so, and button is clickable, go to "Load Game" scene
     if (canLoad && ((main.mouseX > Main.screenX * 0.1f) && (main.mouseX < Main.screenX * 0.9f)) && ((main.mouseY > Main.screenY * ((1.0f / 3.0f) + 0.05f)) && (main.mouseY < Main.screenY * ((2.0f / 3.0f) - 0.05f))))
     {
-      Main.s = new LoadGame(); 
+      Main.s = new LoadGame(main); 
     }
     //Check if mouse is over the "Create Character" button
     else if (((main.mouseX > Main.screenX * 0.1f) && (main.mouseX < Main.screenX * 0.9f)) && ((main.mouseY > Main.screenY * ((2.0f / 3.0f) + 0.05f)) && (main.mouseY < Main.screenY - 0.05f)))

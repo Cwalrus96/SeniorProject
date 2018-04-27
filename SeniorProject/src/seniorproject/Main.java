@@ -61,7 +61,7 @@ public void setup()
   //b. Initialize Global Variables 
   //i. The first scene should always be the start menu
   s = new StartMenu(this); 
-  p = new Player();
+  p = new Player(this);
   //These variables will be used to track time and keep the game running at the target frames per second
   oldT = millis(); 
   newT = oldT; 

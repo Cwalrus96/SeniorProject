@@ -5,12 +5,12 @@ import seniorproject.Main;
 public abstract class Rune
 {   
   //Rune Variables 
-  String type; //Keeps track of the type of rune
+  public String type; //Keeps track of the type of rune
   public float x; //Keeps track of the rune's x position 
   public float y; //Keeps track of the rune's y position 
-  float size; //Keeps track of the rune's radius - depends on the grid size
-  float speedX; 
-  float speedY; 
+  public float size; //Keeps track of the rune's radius - depends on the grid size
+  public float speedX; 
+  public float speedY; 
   Main main; 
   
   Rune(String type, float x, float y, float size, Main main)

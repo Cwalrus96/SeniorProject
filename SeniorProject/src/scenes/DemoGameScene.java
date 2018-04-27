@@ -3,7 +3,13 @@ package scenes;
 import java.util.ArrayList;
 
 import animations.Animation;
+import animations.RuneAnimation;
+import animations.SpriteAnimation;
 import enemies.Enemy;
+import runes.NullRune;
+import runes.FireRune;
+import runes.HealRune; 
+import runes.SlashRune;
 import runes.Rune;
 import seniorproject.Main;
 import seniorproject.Player;
@@ -44,16 +50,16 @@ class DemoGameScene extends Scene {
 	// enemy for demo
 	DemoGameScene(Main main) {
 		super(main);
-		main.p = new Player(main);
-		e = new Enemy();
+		Main.p = new Player(main);
+		e = new Enemy(main);
 		r = new Rune[gridSize][gridSize];
 		animations = new ArrayList<Animation>();
-		animations.add(new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png"));
+		animations.add(new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png", main));
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				// Fills the grid with null runes, which are nothing but placeholders
 				r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-						(screenY) - (runeSize / 2) - (runeSize * i), runeSize);
+						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
 			}
 		}
 		status = "ON";
@@ -66,8 +72,8 @@ class DemoGameScene extends Scene {
 										// smoothly
 	{
 		if (status.equals("ON")) {
-			clear();
-			background(255, 255, 255);
+			main.clear();
+			main.background(255, 255, 255);
 			if (nextRune == true) // Generates the next rune if necessary
 			{
 				generateRune();
@@ -93,11 +99,11 @@ class DemoGameScene extends Scene {
 			// runes that don't combine dissappear, pressing attack clears spellbox +
 			// creates effects
 		} else if (status.equals("PAUSED")) {
-			fill(0, 0, 0, 100);
-			rect(0, 0, Main.screenX, Main.screenY);
-			fill(255, 255, 255);
-			textSize(30);
-			text("PAUSED", Main.screenX * 0.5f, Main.screenY * 0.5f);
+			main.fill(0, 0, 0, 100);
+			main.rect(0, 0, Main.screenX, Main.screenY);
+			main.fill(255, 255, 255);
+			main.textSize(30);
+			main.text("PAUSED", Main.screenX * 0.5f, Main.screenY * 0.5f);
 		} else if (status.equals("WIN")) {
 			drawWin();
 		} else if (status.equals("LOSE")) {
@@ -121,52 +127,52 @@ class DemoGameScene extends Scene {
 
 	// This function is called when the state is "WIN"
 	public void drawWin() {
-		fill(0, 0, 0, 100);
-		rect(0, 0, Main.screenX, Main.screenY);
-		fill(255, 255, 255);
-		textSize(30);
-		text("YOU WIN", Main.screenX * 0.5f, Main.screenY * 0.33f);
-		fill(100, 200, 100);
-		rect(Main.screenX * 0.25f, Main.screenY * 0.4f, Main.screenX * 0.5f, Main.screenY * 0.2f, Main.screenY * 0.01f);
-		fill(255, 255, 255);
-		textAlign(CENTER);
-		textSize(35);
-		text("Play Again", Main.screenX * 0.5f, Main.screenY * 0.5f);
-		fill(230, 230, 90);
-		rect(Main.screenX * 0.25f, Main.screenY * 0.66f, Main.screenX * 0.5f, Main.screenY * 0.2f,
+		main.fill(0, 0, 0, 100);
+		main.rect(0, 0, Main.screenX, Main.screenY);
+		main.fill(255, 255, 255);
+		main.textSize(30);
+		main.text("YOU WIN", Main.screenX * 0.5f, Main.screenY * 0.33f);
+		main.fill(100, 200, 100);
+		main.rect(Main.screenX * 0.25f, Main.screenY * 0.4f, Main.screenX * 0.5f, Main.screenY * 0.2f, Main.screenY * 0.01f);
+		main.fill(255, 255, 255);
+		main.textAlign(Main.CENTER);
+		main.textSize(35);
+		main.text("Play Again", Main.screenX * 0.5f, Main.screenY * 0.5f);
+		main.fill(230, 230, 90);
+		main.rect(Main.screenX * 0.25f, Main.screenY * 0.66f, Main.screenX * 0.5f, Main.screenY * 0.2f,
 				Main.screenY * 0.01f);
-		fill(255, 255, 255);
-		textAlign(CENTER);
-		textSize(35);
-		text("Main Menu", Main.screenX * 0.5f, Main.screenY * 0.76f);
+		main.fill(255, 255, 255);
+		main.textAlign(Main.CENTER);
+		main.textSize(35);
+		main.text("Main Menu", Main.screenX * 0.5f, Main.screenY * 0.76f);
 	}
 
 	// This function is called when the state is "LOSE"
 	public void drawLose() {
-		fill(0, 0, 0, 100);
-		rect(0, 0, Main.screenX, Main.screenY);
-		fill(255, 255, 255);
-		textSize(30);
-		text("YOU LOSE", Main.screenX * 0.5f, Main.screenY * 0.33f);
-		fill(255, 200, 100);
-		rect(Main.screenX * 0.25f, Main.screenY * 0.4f, Main.screenX * 0.5f, Main.screenY * 0.2f, Main.screenY * 0.01f);
-		fill(255, 255, 255);
-		textAlign(CENTER);
-		textSize(35);
-		text("Play Again", Main.screenX * 0.5f, Main.screenY * 0.5f);
-		fill(230, 230, 90);
-		rect(Main.screenX * 0.25f, Main.screenY * 0.66f, Main.screenX * 0.5f, Main.screenY * 0.2f,
+		main.fill(0, 0, 0, 100);
+		main.rect(0, 0, Main.screenX, Main.screenY);
+		main.fill(255, 255, 255);
+		main.textSize(30);
+		main.text("YOU LOSE", Main.screenX * 0.5f, Main.screenY * 0.33f);
+		main.fill(255, 200, 100);
+		main.rect(Main.screenX * 0.25f, Main.screenY * 0.4f, Main.screenX * 0.5f, Main.screenY * 0.2f, Main.screenY * 0.01f);
+		main.fill(255, 255, 255);
+		main.textAlign(Main.CENTER);
+		main.textSize(35);
+		main.text("Play Again", Main.screenX * 0.5f, Main.screenY * 0.5f);
+		main.fill(230, 230, 90);
+		main.rect(Main.screenX * 0.25f, Main.screenY * 0.66f, Main.screenX * 0.5f, Main.screenY * 0.2f,
 				Main.screenY * 0.01f);
-		fill(255, 255, 255);
-		textAlign(CENTER);
-		textSize(35);
-		text("Main Menu", Main.screenX * 0.5f, Main.screenY * 0.76f);
+		main.fill(255, 255, 255);
+		main.textAlign(Main.CENTER);
+		main.textSize(35);
+		main.text("Main Menu", Main.screenX * 0.5f, Main.screenY * 0.76f);
 	}
 
 	public void drawHealthBars() {
-		fill(0, 0, 0);
-		rect(0, 0, Main.screenX * 0.1f, Main.screenY); // background for the player's health bar
-		rect(Main.screenX * 0.9f, 0, Main.screenX * 0.1f, Main.screenY); // background for the enemy's health bar
+		main.fill(0, 0, 0);
+		main.rect(0, 0, Main.screenX * 0.1f, Main.screenY); // background for the player's health bar
+		main.rect(Main.screenX * 0.9f, 0, Main.screenX * 0.1f, Main.screenY); // background for the enemy's health bar
 		// Get color and size information for the player's health bar
 		float healthRatio = Main.p.health / Main.p.maxHealth;
 		float playerGreen = 255;
@@ -189,51 +195,51 @@ class DemoGameScene extends Scene {
 		}
 		// println("playerRed = " + playerRed + ", playerGreen = " + playerGreen, ",
 		// health percentage = " + healthRatio);
-		fill(playerRed, playerGreen, 0);
-		rect(0, 0, Main.screenX * 0.1f, Main.screenY * healthRatio, Main.screenX * 0.05f); // Player's health bar
-		fill(enemyRed, enemyGreen, 0);
-		rect(Main.screenX * 0.9f, 0, Main.screenX * 0.1f, Main.screenY * enemyHealthRatio, Main.screenX * 0.05f);
+		main.fill(playerRed, playerGreen, 0);
+		main.rect(0, 0, Main.screenX * 0.1f, Main.screenY * healthRatio, Main.screenX * 0.05f); // Player's health bar
+		main.fill(enemyRed, enemyGreen, 0);
+		main.rect(Main.screenX * 0.9f, 0, Main.screenX * 0.1f, Main.screenY * enemyHealthRatio, Main.screenX * 0.05f);
 		// 3. Draw energy bar
 		// attacking reduces energy, clearing runes fills it
-		fill(0, 0, 0); // background for the energy bar
-		rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1f,
+		main.fill(0, 0, 0); // background for the energy bar
+		main.rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1f,
 				gridRightEdge - gridLeftEdge, Main.screenX * 0.1f);
-		fill(200, 200, 255); // draw the energy bar
-		rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1f,
+		main.fill(200, 200, 255); // draw the energy bar
+		main.rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1f,
 				(gridRightEdge - gridLeftEdge) * (Main.p.energy / Main.p.maxEnergy), Main.screenX * 0.1f,
 				Main.screenX * 0.05f);
 		// 4. Draw spellbox
-		noFill();
-		rect(gridLeftEdge + (runeSize * start), Main.screenY - (runeSize * boxHeight), runeSize * boxWidth,
+		main.noFill();
+		main.rect(gridLeftEdge + (runeSize * start), Main.screenY - (runeSize * boxHeight), runeSize * boxWidth,
 				runeSize * boxHeight);
 	}
 
 	// There should always be a rune falling from the top of the screen. If there is
 	// not, the game should create one
 	public void generateRune() {
-		rand = (int) random(p.unlockedRunes.size()); // Generates a random rune based on what runes the player currently
+		rand = (int) main.random(Main.p.unlockedRunes.size()); // Generates a random rune based on what runes the player currently
 														// has unlocked
-		String label = p.unlockedRunes.get(rand); // Check label to know what kind of rune to generate
+		String label = Main.p.unlockedRunes.get(rand); // Check label to know what kind of rune to generate
 		// Whatever the rune type, draws it at the top of the grid, and in the
 		// horizontal center
 		if (label.equals("Fire")) {
 			currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize);
+					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Created a new Fire Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size
 			// = " + runeSize);
 		} else if (label.equals("Heal")) {
 			currentRune = new HealRune("Heal", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize);
+					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Created a new Healing Rune. X =" + Main.screenX * 0.5 + ", y = 0.0,
 			// size = " + runeSize);
 		} else if (label.equals("Slash")) {
 			currentRune = new SlashRune("Slash", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize);
+					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Created a new Slash Rune X =" + Main.screenX * 0.5 + ", y = 0.0,
 			// size = " + runeSize);
 		} else {
 			currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize);
+					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Label not recognized =" + Main.screenX * 0.5 + ", y = 0.0, size = "
 			// + runeSize);
 		}
@@ -282,7 +288,7 @@ class DemoGameScene extends Scene {
 			currentRune.speedX = 0;
 			currentRune.speedY = 0;
 			currentRune = new NullRune("Null", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize);
+					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
 			nextRune = true;
 			clearRunes(); // new rune added to the grid - clear any duplicates
 		}
@@ -346,7 +352,7 @@ class DemoGameScene extends Scene {
 						for (int l = i; l < k; l++) // replace all the runes with null runes
 						{
 							r[l][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-									(screenY) - (runeSize / 2) - (runeSize * l), runeSize);
+									(Main.screenY) - (runeSize / 2) - (runeSize * l), runeSize, main);
 						}
 						for (int l = k; l < gridSize - 1; l++) {
 							r[l - chain][j] = r[l][j]; // Drop the runes down to fill in the missing space
@@ -355,7 +361,7 @@ class DemoGameScene extends Scene {
 							// r[l - chain][j].y += runeSize * chain;
 							// replace the missing rune
 							r[l][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-									(screenY) - (runeSize / 2) - (runeSize * l), runeSize);
+									(Main.screenY) - (runeSize / 2) - (runeSize * l), runeSize, main);
 						}
 						Main.p.energy += chain; // Add cleared runes to the player's energy
 						if (Main.p.energy > Main.p.maxEnergy) {
@@ -400,7 +406,7 @@ class DemoGameScene extends Scene {
 								r[m][l].y += runeSize;
 								// Replace the removed rune with a null rune
 								r[m + 1][l] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * l),
-										(screenY) - (runeSize / 2) - (runeSize * (m + 1)), runeSize);
+										(Main.screenY) - (runeSize / 2) - (runeSize * (m + 1)), runeSize, main);
 							}
 						}
 						Main.p.energy += chain; // Add cleared runes to the player's energy
@@ -420,7 +426,7 @@ class DemoGameScene extends Scene {
 			for (int j = 0; j < gridSize; j++) {
 				if (!r[i][j].type.equals("Null")) {
 					r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-							(screenY) - (runeSize / 2) - (runeSize * i), runeSize);
+							(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
 					Main.p.health -= 5;
 				}
 			}
@@ -481,7 +487,7 @@ class DemoGameScene extends Scene {
 		for (int i = 0; i < boxHeight; i++) {
 			for (int j = start; j < end; j++) {
 				r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-						(screenY) - (runeSize / 2) - (runeSize * i), runeSize);
+						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
 			}
 		}
 	}
@@ -533,11 +539,11 @@ class DemoGameScene extends Scene {
 	}
 
 	public char mouseOverButton() {
-		if (((mouseX > Main.screenX * 0.25f) && (mouseX < Main.screenX * 0.75f))
-				&& ((mouseY > Main.screenY * 0.4f) && (mouseY < Main.screenY * 0.6f))) {
+		if (((main.mouseX > Main.screenX * 0.25f) && (main.mouseX < Main.screenX * 0.75f))
+				&& ((main.mouseY > Main.screenY * 0.4f) && (main.mouseY < Main.screenY * 0.6f))) {
 			return 'r';
-		} else if (((mouseX > Main.screenX * 0.25f) && (mouseX < Main.screenX * 0.75f))
-				&& ((mouseY > Main.screenY * 0.66f) && (mouseY < Main.screenY * 0.86f))) {
+		} else if (((main.mouseX > Main.screenX * 0.25f) && (main.mouseX < Main.screenX * 0.75f))
+				&& ((main.mouseY > Main.screenY * 0.66f) && (main.mouseY < Main.screenY * 0.86f))) {
 			return 'm';
 		}
 
@@ -551,47 +557,26 @@ class DemoGameScene extends Scene {
 		if (status.equals("LOSE") || status.equals("WIN")) {
 			char button = mouseOverButton();
 			if (button == 'r') {
-				Main.s = new DemoGameScene();
+				Main.s = new DemoGameScene(main);
 			} else if (button == 'm') {
-				Main.s = new StartMenu();
+				Main.s = new StartMenu(main);
 			}
 		}
 	}
 
-	// This function has two main uses - to see if the user is dragging current gem,
-	// and to see if the user dragged up for an attack
-	public void mouseDragged() {
-		return;
-	}
-
-	// When the player presses a mouse button, the game will check two things. Did
-	// the player click on the currently falling rune? Or did they click on the
-	// spell-box?
-	public void mousePressed() {
-		return;
-	}
-
-	/**
-	 * When the player releases the mouse, check if anything was selected. If a rune
-	 * was selected, release the rune. If the spell-box was selected and the mouse
-	 * is currently above the spell-box, perform an attack
-	 **/
-	public void mouseReleased() {
-		return;
-	}
 
 	public void keyPressed() {
-		if (key == CODED) {
-			if (keyCode == LEFT) {
+		if (main.key == Main.CODED) {
+			if (main.keyCode == Main.LEFT) {
 				currentRune.speedX = -3;
-			} else if (keyCode == RIGHT) {
+			} else if (main.keyCode == Main.RIGHT) {
 				currentRune.speedX = 3;
-			} else if (keyCode == DOWN) {
+			} else if (main.keyCode == Main.DOWN) {
 				currentRune.speedY = 3;
 			}
-		} else if (key == ' ') {
+		} else if (main.key == ' ') {
 			castSpell();
-		} else if ((key == 'p') || (key == 'P')) {
+		} else if ((main.key == 'p') || (main.key == 'P')) {
 			if (status.equals("ON")) {
 				status = "PAUSED";
 			} else if (status.equals("PAUSED")) {
@@ -601,12 +586,12 @@ class DemoGameScene extends Scene {
 	}
 
 	public void keyReleased() {
-		if (key == CODED) {
-			if (keyCode == LEFT) {
+		if (main.key == Main.CODED) {
+			if (main.keyCode == Main.LEFT) {
 				currentRune.speedX = 0;
-			} else if (keyCode == RIGHT) {
+			} else if (main.keyCode == Main.RIGHT) {
 				currentRune.speedX = 0;
-			} else if (keyCode == DOWN) {
+			} else if (main.keyCode == Main.DOWN) {
 				currentRune.speedY = 1;
 			}
 		}
