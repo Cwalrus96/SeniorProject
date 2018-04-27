@@ -1,3 +1,19 @@
+/**TODO: 
+Add button class to ease addition of buttons
+fine better IDE so I don't have to use tabs? 
+Allow user to click on the "load game" button, and use the character file to populate the character 
+create 2 different character classes (at least) - Knight and Mage? 
+Track user levels and experience points
+Create 4 different levels, and a map to move back and forth between. 3 normal enemies and 1 boss 
+Add animations for enemies and attacks 
+Adjust animations for clearing runes + add combos? 
+Turn runes into sprites 
+Add backgrounds + spruce up user interface 
+replace buttons with sprites? 
+**/ 
+
+
+
 //1. Global Variables 
 
 static Scene s;  //Keeps track of the current screen 
