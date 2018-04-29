@@ -151,11 +151,13 @@ public class GameButton {
 			{
 				
 				main.fill(textColor);
+				main.textSize(textSize);
 				main.textAlign(Main.CENTER, Main.CENTER); 
 				main.text(text, x + (width / 2.0f), y + (height / 2.0f));
 			}
 			else
 			{
+				main.textSize(textSize);
 				main.fill(unclickableText);
 				main.textAlign(Main.CENTER, Main.CENTER); 
 				main.text(text, x + (width / 2.0f), y + (height / 2.0f));
