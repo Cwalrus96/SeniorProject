@@ -2,6 +2,7 @@ package scenes;
 
 import java.io.File;
 import java.util.ArrayList;
+import userInterface.ButtonAction;
 
 import seniorproject.Main;
 import userInterface.GameButton;
@@ -17,7 +18,8 @@ import userInterface.GameButton;
  **/
 public class StartMenu extends Scene {
 	// Scene Variables
-	GameButton loadGameButton; 
+	GameButton loadGameButton;
+	GameButton createCharacterButton;
 	boolean buttonPressed = false;
 	int button = 200;
 	int buttonHover = 155;
@@ -28,9 +30,23 @@ public class StartMenu extends Scene {
 
 	public StartMenu(Main main) {
 		super(main);
-		loadGameButton = new GameButton(Main.screenX * 0.1f,
-				Main.screenY * ((1.0f / 3.0f) + 0.05f), Main.screenX * 0.8f, Main.screenY * ((1.0f / 3.0f) - 0.1f),
-				false, "Load Game", button, buttonHover, buttonText, grayedText, 35, Main.screenY * 0.05f, main); 
+		loadGameButton = new GameButton(Main.screenX * 0.1f, Main.screenY * ((1.0f / 3.0f) + 0.05f),
+				Main.screenX * 0.8f, Main.screenY * ((1.0f / 3.0f) - 0.1f), false, "Load Game", button, buttonHover,
+				buttonText, grayedText, 35, Main.screenY * 0.05f, main);
+		createCharacterButton = new GameButton(Main.screenX * 0.1f, Main.screenY * ((2.0f / 3.0f) + 0.05f),
+				Main.screenX * 0.8f, Main.screenY * ((1.0f / 3.0f) - 0.1f), true, "Create \n Character", button,
+				buttonHover, buttonText, grayedText, 35, Main.screenY * 0.05f, main);
+		loadGameButton.action = new ButtonAction() {
+			public void clickAction(Main main) {
+				Main.s = new LoadGame(main);
+			}
+		};
+		createCharacterButton.action = new ButtonAction() {
+			public void clickAction(Main main) {
+				Main.s = new NewCharacter(main);
+			}
+		};
+
 	}
 
 	// 1. These functions are inherited from the Scene interface
@@ -50,18 +66,8 @@ public class StartMenu extends Scene {
 		loadGameButton.clickable = canLoad;
 		loadGameButton.drawButton();
 		// Check if mouse is over the button
-		if (((main.mouseX > Main.screenX * 0.1f) && (main.mouseX < Main.screenX * 0.9f))
-				&& ((main.mouseY > Main.screenY * ((2.0f / 3.0f) + 0.05f)) && (main.mouseY < Main.screenY - 0.05f))) {
-			main.fill(buttonHover);
-		} else {
-			main.fill(button);
-		}
-		main.rect(Main.screenX * 0.1f, Main.screenY * ((2.0f / 3.0f) + 0.05f), Main.screenX * 0.8f,
-				Main.screenY * ((1.0f / 3.0f) - 0.1f), Main.screenY * 0.05f);
-		main.fill(buttonText);
-		main.textAlign(Main.CENTER, Main.CENTER);
-		main.textSize(35);
-		main.text("Create \n Character", Main.screenX * 0.5f, Main.screenY * (0.5f + (1.0f / 3.0f)));
+		createCharacterButton.checkHover(main.mouseX, main.mouseY);
+		createCharacterButton.drawButton();
 	}
 
 	// 2. These functions will be called by the main function if the appropriate
@@ -72,15 +78,12 @@ public class StartMenu extends Scene {
 	public void mouseClicked() {
 		// Check if mouse is over "Load Game Button". If so, and button is clickable, go
 		// to "Load Game" scene
-		if (canLoad && ((main.mouseX > Main.screenX * 0.1f) && (main.mouseX < Main.screenX * 0.9f))
-				&& ((main.mouseY > Main.screenY * ((1.0f / 3.0f) + 0.05f))
-						&& (main.mouseY < Main.screenY * ((2.0f / 3.0f) - 0.05f)))) {
-			Main.s = new LoadGame(main);
+		if (loadGameButton.isClicked(main.mouseX, main.mouseY)) {
+			return;
 		}
 		// Check if mouse is over the "Create Character" button
-		else if (((main.mouseX > Main.screenX * 0.1f) && (main.mouseX < Main.screenX * 0.9f))
-				&& ((main.mouseY > Main.screenY * ((2.0f / 3.0f) + 0.05f)) && (main.mouseY < Main.screenY - 0.05f))) {
-			Main.s = new NewCharacter(main);
+		else if (createCharacterButton.isClicked(main.mouseX, main.mouseY)) {
+			return;
 		}
 	}
 

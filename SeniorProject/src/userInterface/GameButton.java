@@ -22,7 +22,7 @@ public class GameButton {
 	PImage buttonImage;
 	PImage unclickableImage;
 	float edgeRadius; //Controls radius of rounded corners when drawing button
-	ButtonAction action; 
+	public ButtonAction action; 
 	Main main; 
 	boolean hovering = false; 
 	
@@ -30,7 +30,7 @@ public class GameButton {
 	
 	//First constructor will be for an image 
 	public GameButton(float x, float y, float width, float height, 
-			boolean clickable, PImage buttonImage, PImage unclickableImage,ButtonAction action, Main main)
+			boolean clickable, PImage buttonImage, PImage unclickableImage,Main main)
 	{
 		this.x = x; 
 		this.y = y; 
@@ -94,8 +94,14 @@ public class GameButton {
 	public boolean isClicked(float mouseX, float mouseY)
 	{
 		if ((clickable) && ((mouseX > x) && (mouseX < (x + width)))
-				&& ((mouseY > y) && (mouseY < (y + height)))) {
-			action.clickAction(main); 
+				&& ((mouseY > y) && (mouseY < (y + height)))) 
+		{
+			if(action != null)
+				action.clickAction(main); 
+			else
+			{
+				System.out.println("button action not set");
+			}
 			return true;
 		}
 		else return false; 

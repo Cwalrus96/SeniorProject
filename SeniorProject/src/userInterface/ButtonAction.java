@@ -2,8 +2,8 @@ package userInterface;
 
 import seniorproject.Main;
 
-public abstract class ButtonAction {
+public interface ButtonAction {
 	
-	public abstract void clickAction(Main main); 
+	public void clickAction(Main main); 
 
 }
