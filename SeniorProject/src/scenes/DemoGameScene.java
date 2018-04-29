@@ -21,7 +21,7 @@ import seniorproject.Player;
  * to handle attacks besides hardcoding them. Should use some combination of the
  * player/enemy's stats Replace RuneAnimation with SpriteAnimations? Also,
  **/
-class DemoGameScene extends Scene {
+public class DemoGameScene extends Scene {
 
 	// 1. Class Variables
 	Enemy e; // Keeps track of the enemy that you are currently battling
@@ -49,6 +49,24 @@ class DemoGameScene extends Scene {
 	// Basic constructor that is going to create a new dummy character and dummy
 	// enemy for demo
 	DemoGameScene(Main main) {
+		super(main);
+		Main.p = new Player(main);
+		e = new Enemy(main);
+		r = new Rune[gridSize][gridSize];
+		animations = new ArrayList<Animation>();
+		animations.add(new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png", main));
+		for (int i = 0; i < gridSize; i++) {
+			for (int j = 0; j < gridSize; j++) {
+				// Fills the grid with null runes, which are nothing but placeholders
+				r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
+						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
+			}
+		}
+		status = "ON";
+	}
+	
+	//This creates a demo game scene with the chosen player
+	public DemoGameScene(Main main, Player p) {
 		super(main);
 		Main.p = new Player(main);
 		e = new Enemy(main);

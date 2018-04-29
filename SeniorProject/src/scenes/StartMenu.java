@@ -25,8 +25,7 @@ public class StartMenu extends Scene {
 	int buttonHover = 155;
 	int buttonText = 0;
 	int grayedText = 100;
-	File f = new File("/Data/Characters.txt");
-	boolean canLoad;
+	File f = new File("Data/Characters.txt");
 
 	public StartMenu(Main main) {
 		super(main);
@@ -62,8 +61,7 @@ public class StartMenu extends Scene {
 		// Check if the mouse is over the button
 		loadGameButton.checkHover(main.mouseX, main.mouseY);
 		// Check if the Load Game button is clickable
-		canLoad = f.isFile();
-		loadGameButton.clickable = canLoad;
+		loadGameButton.clickable = f.exists();
 		loadGameButton.drawButton();
 		// Check if mouse is over the button
 		createCharacterButton.checkHover(main.mouseX, main.mouseY);

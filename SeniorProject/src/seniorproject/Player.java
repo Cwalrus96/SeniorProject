@@ -1,6 +1,7 @@
 package seniorproject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Player 
 {
@@ -49,6 +50,19 @@ public class Player
      this.name = name;
   }
   
+  //This constructor is used when loading a character from a JSON file
+  public Player(float maxHealth, float health, float maxEnergy, float energy, String[] unlockedRunes, String name)
+  {
+	  this.maxHealth = maxHealth; 
+	  this.health = health; 
+	  this.maxEnergy = maxEnergy; 
+	  this.energy = energy; 
+	  this.unlockedRunes = new ArrayList<String>(Arrays.asList(unlockedRunes)); 
+	  this.name = name; 
+	  x = Main.screenX * 0.2f; 
+	  y = Main.screenY - Main.screenX; 
+  }
+		  
   
   
   public void drawPlayer()
