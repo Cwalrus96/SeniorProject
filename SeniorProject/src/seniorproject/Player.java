@@ -29,8 +29,8 @@ public class Player {
 	SpriteAnimation sprite;
 	public boolean statusChange;
 	Main main;
-	int currentLevel; //Keeps track of the player's current location on the map (which level are they on)
-	Map<Integer, Boolean> unlockedLevels; //Keeps track of which levels the player has unlocked so far
+	public int currentLevel; //Keeps track of the player's current location on the map (which level are they on)
+	public Map<Integer, Boolean> unlockedLevels; //Keeps track of which levels the player has unlocked so far
 	
 	public Player(Main main) // Used to create a null or default character
 	{

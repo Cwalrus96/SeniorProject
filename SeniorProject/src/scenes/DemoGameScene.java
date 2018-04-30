@@ -44,6 +44,8 @@ public class DemoGameScene extends Scene {
 	int maxNum = 2;
 	int start = ((gridSize - boxWidth) / 2);
 	int end = start + boxWidth;
+	float startingEnergy; 
+	float startingHealth;
 	GameStatus status; // Keeps track of the current state of the program. Possible states are - ON,
 					// PAUSED, WIN, and LOSE
 	ArrayList<Animation> animations; // This will keep track of all the animations currently going on the screen
@@ -69,6 +71,8 @@ public class DemoGameScene extends Scene {
 		}
 		status = GameStatus.ON;
 		buttons = new ArrayList<GameButton>();
+		startingEnergy = Main.p.energy;
+		startingHealth = Main.p.health;
 	}
 	
 	//This creates a demo game scene with the chosen player
@@ -88,6 +92,8 @@ public class DemoGameScene extends Scene {
 		}
 		status = GameStatus.ON;
 		buttons = new ArrayList<GameButton>();
+		startingEnergy = Main.p.energy;
+		startingHealth = Main.p.health;
 	}
 
 	// Draw the playing area, player + enemy health-bars, and all of the runes to
@@ -118,6 +124,8 @@ public class DemoGameScene extends Scene {
 				if(status != GameStatus.WIN)
 				{
 					status = GameStatus.WIN;
+					Main.p.unlockedLevels.replace(3, true); 
+					main.savePlayer(); 
 					//Add buttons
 					buttons.clear();
 					GameButton continueButton = new GameButton(Main.screenX * 0.25f, Main.screenY * 0.4f, 
@@ -135,7 +143,6 @@ public class DemoGameScene extends Scene {
 					};
 					menuButton.action = new ButtonAction() {
 						public void clickAction(Main main) {
-							main.savePlayer(); 
 							Main.s = new StartMenu(main);
 						}
 					};
@@ -150,7 +157,7 @@ public class DemoGameScene extends Scene {
 					//Add buttons
 					buttons.clear();
 					GameButton continueButton = new GameButton(Main.screenX * 0.25f, Main.screenY * 0.4f, 
-							Main.screenX * 0.5f, Main.screenY * 0.2f, true, "Play Again", 
+							Main.screenX * 0.5f, Main.screenY * 0.2f, true, "Try Again", 
 							main.color(100, 200, 100), main.color(55, 155, 55), 255, 0, 35, 
 							Main.screenY * 0.1f, main);
 					GameButton menuButton = new GameButton(Main.screenX * 0.25f, Main.screenY * 0.66f, 
@@ -159,6 +166,8 @@ public class DemoGameScene extends Scene {
 							Main.screenY * 0.1f, main);
 					continueButton.action = new ButtonAction() {
 						public void clickAction(Main main) {
+							Main.p.health = startingHealth; 
+							Main.p.energy = startingEnergy;
 							Main.s = new DemoGameScene(main, Main.p);
 						}
 					};
@@ -211,6 +220,8 @@ public class DemoGameScene extends Scene {
 	public void drawWin() {
 		main.clear(); 
 		main.background(0);
+		main.textSize(35);
+		main.text("You Win", Main.screenX * 0.5f, Main.screenY * 0.2f);
 		for(GameButton b: buttons)
 		{
 			b.checkHover(main.mouseX, main.mouseY);
@@ -220,6 +231,11 @@ public class DemoGameScene extends Scene {
 
 	// This function is called when the state is "LOSE"
 	public void drawLose() {
+		main.clear(); 
+		main.background(0);
+		main.fill(255); 
+		main.textSize(35);
+		main.text("You Lose", Main.screenX * 0.5f, Main.screenY * 0.2f);
 		for(GameButton b: buttons)
 		{
 			b.checkHover(main.mouseX, main.mouseY);

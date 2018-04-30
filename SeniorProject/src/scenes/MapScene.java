@@ -25,13 +25,13 @@ public class MapScene extends Scene {
 				main);
 		
 		level1 = new GameButton(Main.screenX * 0.7f, Main.screenX * 0.8f, Main.screenX * 0.2f, Main.screenX * 0.2f,
-				true, "1", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
+				Main.p.unlockedLevels.get(1), "1", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
 		
 		level2 = new GameButton(Main.screenX * 0.1f, Main.screenX * 0.2f, Main.screenX * 0.2f, Main.screenX * 0.2f,
-				true, "2", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
+				Main.p.unlockedLevels.get(2), "2", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
 		
 		bossLevel = new GameButton(Main.screenX * 0.65f, Main.screenX * 0.15f, Main.screenX * 0.3f, Main.screenX * 0.3f,
-				false, "Boss", main.color(255, 100, 100), main.color(255, 55, 55), 0, 100, 25, Main.screenX * 0.15f,
+				Main.p.unlockedLevels.get(3), "Boss", main.color(255, 100, 100), main.color(255, 55, 55), 0, 100, 25, Main.screenX * 0.15f,
 				main);
 		
 		level1.action = new ButtonAction() {
@@ -56,7 +56,22 @@ public class MapScene extends Scene {
 		};
 				
 		Main.p.status = CharacterStatus.IDLE;
-		currentButton = startSpot;
+		if(Main.p.currentLevel == 1)
+		{
+			currentButton = level1; 
+		}
+		else if(Main.p.currentLevel == 2)
+		{
+			currentButton = level2;
+		}
+		else if(Main.p.currentLevel == 3)
+		{
+			currentButton = bossLevel;
+		}
+		else
+		{
+			currentButton = startSpot;	
+		}
 		characterSprite = new SpriteAnimation(32 * 9, 32, currentButton.x, currentButton.y, 9, Main.p.getSpriteFile(), main);
 	}
 
@@ -99,6 +114,18 @@ public class MapScene extends Scene {
 		}
 		else if(clickedButton != null)
 		{
+			if(currentButton == level1)
+			{
+				Main.p.currentLevel = 1;
+			}
+			else if(currentButton == level2)
+			{
+				Main.p.currentLevel = 2; 
+			}
+			else if(currentButton == bossLevel)
+			{
+				Main.p.currentLevel = 3;
+			}
 			if(clickedButton == level1 || clickedButton == level2)
 			{
 				Main.s = new DemoGameScene(main, Main.p); 
