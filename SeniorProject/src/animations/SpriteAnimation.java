@@ -1,5 +1,7 @@
 package animations;
 
+import java.io.File;
+
 import processing.core.PImage;
 import seniorproject.Main;
 
@@ -8,12 +10,13 @@ public class SpriteAnimation extends Animation {
 	float spriteWidth;
 	float spriteHeight;
 	PImage spriteSheet;
+	File sheetFile;
 	int frame;
 	int numFrames;
 	long oldT;
 	long newT;
-	float x;
-	float y;
+	public float x;
+	public float y;
 
 	public SpriteAnimation(float width, float height, float x, float y, int numFrames, String sheetFile, Main main) {
 		this.main = main;
@@ -22,7 +25,12 @@ public class SpriteAnimation extends Animation {
 		this.x = x;
 		this.y = y;
 		this.numFrames = numFrames;
-		spriteSheet = main.loadImage(sheetFile);
+		this.sheetFile = new File(sheetFile); 
+		if(this.sheetFile.isFile())
+		{
+			System.out.println(this.sheetFile.getAbsolutePath()); 
+			spriteSheet = main.loadImage(this.sheetFile.getPath());
+		}
 		oldT = main.millis();
 		newT = oldT;
 		main.image(spriteSheet, x, y, spriteWidth, spriteHeight);

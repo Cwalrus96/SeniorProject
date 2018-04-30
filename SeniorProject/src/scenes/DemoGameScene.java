@@ -13,6 +13,8 @@ import runes.SlashRune;
 import runes.Rune;
 import seniorproject.Main;
 import seniorproject.Player;
+import userInterface.ButtonAction;
+import userInterface.GameButton;
 
 //This scene represents the actual gameplay of the game. For now, will make simplest possible demo version. 
 /**
@@ -42,9 +44,11 @@ public class DemoGameScene extends Scene {
 	int maxNum = 2;
 	int start = ((gridSize - boxWidth) / 2);
 	int end = start + boxWidth;
-	String status; // Keeps track of the current state of the program. Possible states are - ON,
+	GameStatus status; // Keeps track of the current state of the program. Possible states are - ON,
 					// PAUSED, WIN, and LOSE
 	ArrayList<Animation> animations; // This will keep track of all the animations currently going on the screen
+	SpriteAnimation characterAnimation; 
+	ArrayList<GameButton> buttons; 
 
 	// Basic constructor that is going to create a new dummy character and dummy
 	// enemy for demo
@@ -54,7 +58,8 @@ public class DemoGameScene extends Scene {
 		e = new Enemy(main);
 		r = new Rune[gridSize][gridSize];
 		animations = new ArrayList<Animation>();
-		animations.add(new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png", main));
+		characterAnimation = new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, "Resources/WizardIdle.png", main);
+		animations.add(characterAnimation);
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				// Fills the grid with null runes, which are nothing but placeholders
@@ -62,17 +67,18 @@ public class DemoGameScene extends Scene {
 						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
 			}
 		}
-		status = "ON";
+		status = GameStatus.ON;
+		buttons = new ArrayList<GameButton>();
 	}
 	
 	//This creates a demo game scene with the chosen player
 	public DemoGameScene(Main main, Player p) {
 		super(main);
-		Main.p = new Player(main);
 		e = new Enemy(main);
 		r = new Rune[gridSize][gridSize];
 		animations = new ArrayList<Animation>();
-		animations.add(new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, "../Animations/LittleSpriteGuy.png", main));
+		characterAnimation = new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, Main.p.getSpriteFile(), main);
+		animations.add(characterAnimation);
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				// Fills the grid with null runes, which are nothing but placeholders
@@ -80,7 +86,8 @@ public class DemoGameScene extends Scene {
 						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
 			}
 		}
-		status = "ON";
+		status = GameStatus.ON;
+		buttons = new ArrayList<GameButton>();
 	}
 
 	// Draw the playing area, player + enemy health-bars, and all of the runes to
@@ -89,7 +96,7 @@ public class DemoGameScene extends Scene {
 										// and is used to control the speed of moving objects to make everything move
 										// smoothly
 	{
-		if (status.equals("ON")) {
+		if (status == GameStatus.ON) {
 			main.clear();
 			main.background(255, 255, 255);
 			if (nextRune == true) // Generates the next rune if necessary
@@ -108,23 +115,75 @@ public class DemoGameScene extends Scene {
 			// health bars should change size and color based on health
 			drawHealthBars();
 			if (e.health <= 0) {
-				status = "WIN";
+				if(status != GameStatus.WIN)
+				{
+					status = GameStatus.WIN;
+					//Add buttons
+					buttons.clear();
+					GameButton continueButton = new GameButton(Main.screenX * 0.25f, Main.screenY * 0.4f, 
+							Main.screenX * 0.5f, Main.screenY * 0.2f, true, "Continue", 
+							main.color(100, 200, 100), main.color(55, 155, 55), 255, 0, 35, 
+							Main.screenY * 0.1f, main);
+					GameButton menuButton = new GameButton(Main.screenX * 0.25f, Main.screenY * 0.66f, 
+							Main.screenX * 0.5f, Main.screenY * 0.2f, true, "Main Menu", 
+							main.color(230, 230, 90), main.color(200, 200, 55), 255, 0, 35, 
+							Main.screenY * 0.1f, main);
+					continueButton.action = new ButtonAction() {
+						public void clickAction(Main main) {
+							Main.s = new MapScene(main);
+						}
+					};
+					menuButton.action = new ButtonAction() {
+						public void clickAction(Main main) {
+							main.savePlayer(); 
+							Main.s = new StartMenu(main);
+						}
+					};
+					buttons.add(continueButton);
+					buttons.add(menuButton);
+				}
 			}
 			if (Main.p.health <= 0) {
-				status = "LOSE";
+				if(status != GameStatus.LOSE)
+				{
+					status = GameStatus.LOSE;
+					//Add buttons
+					buttons.clear();
+					GameButton continueButton = new GameButton(Main.screenX * 0.25f, Main.screenY * 0.4f, 
+							Main.screenX * 0.5f, Main.screenY * 0.2f, true, "Play Again", 
+							main.color(100, 200, 100), main.color(55, 155, 55), 255, 0, 35, 
+							Main.screenY * 0.1f, main);
+					GameButton menuButton = new GameButton(Main.screenX * 0.25f, Main.screenY * 0.66f, 
+							Main.screenX * 0.5f, Main.screenY * 0.2f, true, "Main Menu", 
+							main.color(230, 230, 90), main.color(200, 200, 55), 255, 0, 35, 
+							Main.screenY * 0.1f, main);
+					continueButton.action = new ButtonAction() {
+						public void clickAction(Main main) {
+							Main.s = new DemoGameScene(main, Main.p);
+						}
+					};
+					menuButton.action = new ButtonAction() {
+						public void clickAction(Main main) {
+							main.savePlayer(); 
+							Main.s = new StartMenu(main);
+						}
+					};
+					buttons.add(continueButton);
+					buttons.add(menuButton);
+				}
 			}
 			animateAll(diff);
 			// runes that don't combine dissappear, pressing attack clears spellbox +
 			// creates effects
-		} else if (status.equals("PAUSED")) {
+		} else if (status == GameStatus.PAUSED) {
 			main.fill(0, 0, 0, 100);
 			main.rect(0, 0, Main.screenX, Main.screenY);
 			main.fill(255, 255, 255);
 			main.textSize(30);
 			main.text("PAUSED", Main.screenX * 0.5f, Main.screenY * 0.5f);
-		} else if (status.equals("WIN")) {
+		} else if (status == GameStatus.WIN) {
 			drawWin();
-		} else if (status.equals("LOSE")) {
+		} else if (status == GameStatus.LOSE) {
 			drawLose();
 		}
 		// println(status);
@@ -133,6 +192,11 @@ public class DemoGameScene extends Scene {
 	// This function is called to run through all animations currently happening in
 	// the scene
 	public void animateAll(long diff) {
+		if (Main.p.statusChange)
+		{
+			Main.p.statusChange = false;
+			characterAnimation = new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, Main.p.getSpriteFile(), main);
+		}
 		ArrayList<Animation> toRemove = new ArrayList<Animation>();
 		for (Animation a : animations) {
 			boolean keep = a.animate(diff);
@@ -145,46 +209,22 @@ public class DemoGameScene extends Scene {
 
 	// This function is called when the state is "WIN"
 	public void drawWin() {
-		main.fill(0, 0, 0, 100);
-		main.rect(0, 0, Main.screenX, Main.screenY);
-		main.fill(255, 255, 255);
-		main.textSize(30);
-		main.text("YOU WIN", Main.screenX * 0.5f, Main.screenY * 0.33f);
-		main.fill(100, 200, 100);
-		main.rect(Main.screenX * 0.25f, Main.screenY * 0.4f, Main.screenX * 0.5f, Main.screenY * 0.2f, Main.screenY * 0.01f);
-		main.fill(255, 255, 255);
-		main.textAlign(Main.CENTER);
-		main.textSize(35);
-		main.text("Play Again", Main.screenX * 0.5f, Main.screenY * 0.5f);
-		main.fill(230, 230, 90);
-		main.rect(Main.screenX * 0.25f, Main.screenY * 0.66f, Main.screenX * 0.5f, Main.screenY * 0.2f,
-				Main.screenY * 0.01f);
-		main.fill(255, 255, 255);
-		main.textAlign(Main.CENTER);
-		main.textSize(35);
-		main.text("Main Menu", Main.screenX * 0.5f, Main.screenY * 0.76f);
+		main.clear(); 
+		main.background(0);
+		for(GameButton b: buttons)
+		{
+			b.checkHover(main.mouseX, main.mouseY);
+			b.drawButton();
+		}	
 	}
 
 	// This function is called when the state is "LOSE"
 	public void drawLose() {
-		main.fill(0, 0, 0, 100);
-		main.rect(0, 0, Main.screenX, Main.screenY);
-		main.fill(255, 255, 255);
-		main.textSize(30);
-		main.text("YOU LOSE", Main.screenX * 0.5f, Main.screenY * 0.33f);
-		main.fill(255, 200, 100);
-		main.rect(Main.screenX * 0.25f, Main.screenY * 0.4f, Main.screenX * 0.5f, Main.screenY * 0.2f, Main.screenY * 0.01f);
-		main.fill(255, 255, 255);
-		main.textAlign(Main.CENTER);
-		main.textSize(35);
-		main.text("Play Again", Main.screenX * 0.5f, Main.screenY * 0.5f);
-		main.fill(230, 230, 90);
-		main.rect(Main.screenX * 0.25f, Main.screenY * 0.66f, Main.screenX * 0.5f, Main.screenY * 0.2f,
-				Main.screenY * 0.01f);
-		main.fill(255, 255, 255);
-		main.textAlign(Main.CENTER);
-		main.textSize(35);
-		main.text("Main Menu", Main.screenX * 0.5f, Main.screenY * 0.76f);
+		for(GameButton b: buttons)
+		{
+			b.checkHover(main.mouseX, main.mouseY);
+			b.drawButton();
+		}
 	}
 
 	public void drawHealthBars() {
@@ -572,12 +612,13 @@ public class DemoGameScene extends Scene {
 	// This function can be used to check if the user pressed any of the on-screen
 	// controls (to be implemented later).
 	public void mouseClicked() {
-		if (status.equals("LOSE") || status.equals("WIN")) {
-			char button = mouseOverButton();
-			if (button == 'r') {
-				Main.s = new DemoGameScene(main);
-			} else if (button == 'm') {
-				Main.s = new StartMenu(main);
+		if (status == GameStatus.LOSE || status == GameStatus.WIN) {
+			for(GameButton b : buttons)
+			{
+				if(b.isClicked(main.mouseX, main.mouseY))
+				{
+					return;
+				}
 			}
 		}
 	}
@@ -595,10 +636,10 @@ public class DemoGameScene extends Scene {
 		} else if (main.key == ' ') {
 			castSpell();
 		} else if ((main.key == 'p') || (main.key == 'P')) {
-			if (status.equals("ON")) {
-				status = "PAUSED";
-			} else if (status.equals("PAUSED")) {
-				status = "ON";
+			if (status == GameStatus.ON) {
+				status = GameStatus.ON; 
+			} else if (status == GameStatus.PAUSED) {
+				status = GameStatus.ON; 
 			}
 		}
 	}

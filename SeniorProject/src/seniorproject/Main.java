@@ -5,9 +5,12 @@ import processing.data.*;
 import scenes.Scene;
 import scenes.StartMenu;
 import scenes.DemoGameScene;
+import scenes.MapScene;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main extends PApplet {
 
@@ -50,6 +53,7 @@ public class Main extends PApplet {
 
 		// b. Initialize Global Variables
 		// i. The first scene should always be the start menu
+		//s = new StartMenu(this);
 		s = new StartMenu(this);
 		p = new Player(this);
 		// These variables will be used to track time and keep the game running at the
@@ -89,6 +93,16 @@ public class Main extends PApplet {
 			savePlayer.setFloat("energy", p.energy);
 			savePlayer.setFloat("x", p.x);
 			savePlayer.setFloat("y", p.y);
+			String characterClass  = null; 
+			if(p.characterClass == CharacterClass.WIZARD)
+			{
+				characterClass = "Wizard";
+			}
+			else if(p.characterClass == CharacterClass.KNIGHT)
+			{
+				characterClass = "Knight";
+			}
+			savePlayer.setString("characterClass", characterClass);
 			JSONArray unlockedRunes = new JSONArray();
 			int i = 0;
 			for (String r : p.unlockedRunes) {
@@ -96,10 +110,17 @@ public class Main extends PApplet {
 				i++;
 			}
 			savePlayer.setJSONArray("unlockedRunes", unlockedRunes);
+			savePlayer.setInt("currentLevel", p.currentLevel);
+			JSONArray unlockedLevels = new JSONArray(); 
+			unlockedLevels.setBoolean(0, p.unlockedLevels.get(1));
+			unlockedLevels.setBoolean(1, p.unlockedLevels.get(2));
+			unlockedLevels.setBoolean(2, p.unlockedLevels.get(3));
+			savePlayer.setJSONArray("unlockedLevels", unlockedLevels);
+			
 			if (!listFile.isFile()) // if listFile doesn't exist create it, add the character's name, and create a
 									// file for the character
 			{
-				println("list file doesn't exist");
+				//println("list file doesn't exist");
 				PrintWriter writeList = createWriter(listFile);
 				writeList.println(p.name);
 				writeList.flush();
@@ -110,13 +131,18 @@ public class Main extends PApplet {
 				writeCharacter.flush();
 				writeCharacter.close();
 			} else {
-				println(listFile.getAbsolutePath());
+				//println(listFile.getAbsolutePath());
+				String[] fileStrings = loadStrings(listFile);
+				ArrayList<String> fileList = new ArrayList<String>(Arrays.asList(fileStrings)); 
+				fileList.add(p.name);
+				fileStrings = fileList.toArray(fileStrings);
+				saveStrings(listFile, fileStrings);
 				PrintWriter writeCharacter = createWriter(characterFile);
 				// saveJSONObject(savePlayer, "Data/" + p.name + ".json");
 				writeCharacter.print(savePlayer);
 				writeCharacter.flush();
 				writeCharacter.close();
-				print(savePlayer);
+				//print(savePlayer);
 			}
 		}
 	}
@@ -133,8 +159,21 @@ public class Main extends PApplet {
 		float energy = playerJSON.getFloat("energy"); 
 		float maxEnergy = playerJSON.getFloat("maxEnergy");
 		String[] unlockedRunes = playerJSON.getJSONArray("unlockedRunes").getStringArray();
-		p = new Player(maxHealth, health, maxEnergy, energy, unlockedRunes, name);
-		s = new DemoGameScene(this, p);
+		String characterString = playerJSON.getString("characterClass");
+		CharacterClass characterClass = null; 
+		if(characterString.equals("Wizard"))
+		{
+			characterClass = CharacterClass.WIZARD; 
+		}
+		else if(characterString.equals("Knight"))
+		{
+			characterClass = CharacterClass.KNIGHT;
+		}
+		int currentLevel = playerJSON.getInt("currentLevel");
+		boolean unlockedLevels[] = playerJSON.getJSONArray("unlockedLevels").getBooleanArray();
+		p = new Player(maxHealth, health, maxEnergy, energy, unlockedRunes,characterClass, name,
+				currentLevel, unlockedLevels[0], unlockedLevels[1], unlockedLevels[2]);
+		s = new MapScene(this);
 	}
 
 	// For all input event functions, simply call the corresponding function in the

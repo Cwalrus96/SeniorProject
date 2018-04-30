@@ -7,8 +7,8 @@ import seniorproject.Main;
 
 
 public class GameButton {
-	float x; //The x coordinate of the button (upper left corner) 
-	float y; //the y coordinate of the button (upper left corner) 
+	public float x; //The x coordinate of the button (upper left corner) 
+	public float y; //the y coordinate of the button (upper left corner) 
 	float width;
 	float height; 
 	public boolean clickable; //Determines whether the button can currently be pressed or not
@@ -67,7 +67,7 @@ public class GameButton {
 	
 	//Third constructor is like above, but includes a value for the edge radius
 	public GameButton(float x, float y, float width, float height, 
-			boolean clickable, String text,int buttonColor, int buttoHover,
+			boolean clickable, String text,int buttonColor, int buttonHover,
 			int textColor, int unclickableText, int textSize, float edgeRadius, Main main)
 	{
 		this.x = x; 
@@ -77,7 +77,7 @@ public class GameButton {
 		this.clickable = clickable;
 		this.text = text; 
 		this.buttonColor = buttonColor; 
-		this.buttonHover = buttoHover; 
+		this.buttonHover = buttonHover; 
 		this.buttonImage = null; 
 		this.unclickableImage = null; 
 		this.edgeRadius = edgeRadius; 

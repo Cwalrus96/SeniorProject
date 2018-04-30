@@ -43,8 +43,7 @@ class NewCharacter extends Scene {
 				// Also, add name to characters list file
 				else {
 					Main.p = new Player(new String(text).trim());
-					main.savePlayer();
-					Main.s = new DemoGameScene(main, Main.p);
+					Main.s = new CustomizeCharacterScene(main);
 				}
 			}
 		};
