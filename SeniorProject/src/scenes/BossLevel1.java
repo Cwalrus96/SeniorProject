@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import animations.Animation;
 import animations.RuneAnimation;
 import animations.SpriteAnimation;
+import enemies.Boss1;
 import enemies.Enemy;
 import runes.NullRune;
 import runes.FireRune;
@@ -16,22 +17,19 @@ import seniorproject.Player;
 import userInterface.ButtonAction;
 import userInterface.GameButton;
 
-//This scene represents the actual gameplay of the game. For now, will make simplest possible demo version. 
-/**
- * TODO Implement mouse controls Implement on-screen buttons? Make "GameState"
- * enum, and convert all state checks to use the enum Figure out a different way
- * to handle attacks besides hardcoding them. Should use some combination of the
- * player/enemy's stats Replace RuneAnimation with SpriteAnimations? Also,
- **/
-public class DemoGameScene extends Scene {
+/**This is the first boss level of the game. Everything is the same, except the rune part of the screen is upside 
+ * down and controls are flipped 
+ *
+ */
+public class BossLevel1 extends Scene {
 
 	// 1. Class Variables
 	Enemy e; // Keeps track of the enemy that you are currently battling
 	Rune[][] r;
 	int gridSize = 9; // Adjusts the size of the grid, and therefore the number of runes
 	boolean nextRune = true; // This flag keeps track of when to generate the next rune
-	float gridLeftEdge = (Main.screenX * 0.1f); // Keeps track of the leftmost edge of the rune grid. Runes should not
-												// go beyond this point
+	// Keeps track of the leftmost edge of the rune grid. Runes should not go beyond this point	
+	float gridLeftEdge = (Main.screenX * 0.1f); 										
 	float gridRightEdge = (Main.screenX * 0.9f); // Keeps track of the right edge of the rune grid
 	float runeSize = ((gridRightEdge - gridLeftEdge) / ((float) gridSize)); // Keeps track of the rune radius
 	Rune currentRune; // Keeps track of the rune that the player currently controls
@@ -50,49 +48,25 @@ public class DemoGameScene extends Scene {
 					// PAUSED, WIN, and LOSE
 	ArrayList<Animation> animations; // This will keep track of all the animations currently going on the screen
 	SpriteAnimation characterAnimation; 
-	SpriteAnimation enemyAnimation;
+	SpriteAnimation bossAnimation;
 	ArrayList<GameButton> buttons; 
-
-	// Basic constructor that is going to create a new dummy character and dummy
-	// enemy for demo
-	public DemoGameScene(Main main) {
-		super(main);
-		Main.p = new Player(main);
-		e = new Enemy(main);
-		r = new Rune[gridSize][gridSize];
-		animations = new ArrayList<Animation>();
-		characterAnimation = new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, "Resources/WizardIdle.png", main);
-		enemyAnimation = new SpriteAnimation(64 * 9, 64, e.x, e.y, 9, "Resources/EnemyIdle.png", main);
-		animations.add(characterAnimation);
-		animations.add(enemyAnimation);
-		for (int i = 0; i < gridSize; i++) {
-			for (int j = 0; j < gridSize; j++) {
-				// Fills the grid with null runes, which are nothing but placeholders
-				r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
-			}
-		}
-		status = GameStatus.ON;
-		buttons = new ArrayList<GameButton>();
-		startingEnergy = Main.p.energy;
-		startingHealth = Main.p.health;
-	}
 	
 	//This creates a demo game scene with the chosen player
-	public DemoGameScene(Main main, Player p) {
+	public BossLevel1(Main main) {
 		super(main);
-		e = new Enemy(main);
+		e = new Boss1(main); //Replace this enemy with Boss 1
 		r = new Rune[gridSize][gridSize];
 		animations = new ArrayList<Animation>();
-		characterAnimation = new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y, 9, Main.p.getSpriteFile(), main);
-		enemyAnimation = new SpriteAnimation(64 * 9, 64, e.x, e.y, 9, "Resources/EnemyIdle.png", main);
+		//Main.p = new Player(main); 
+		characterAnimation = new SpriteAnimation(32 * 9, 32, Main.p.x, Main.p.y + Main.screenX , 9, Main.p.getSpriteFile(), main);
+		bossAnimation = new SpriteAnimation(128 * 9, 128, e.x, e.y, 9, "Resources/Boss1.png", main ); 
 		animations.add(characterAnimation);
-		animations.add(enemyAnimation);
+		animations.add(bossAnimation);
 		for (int i = 0; i < gridSize; i++) {
 			for (int j = 0; j < gridSize; j++) {
 				// Fills the grid with null runes, which are nothing but placeholders
 				r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
+						(runeSize / 2.0f) + (runeSize * i), runeSize, main);
 			}
 		}
 		status = GameStatus.ON;
@@ -121,7 +95,7 @@ public class DemoGameScene extends Scene {
 			drawRuneGrid();
 			// 1. Draw enemy and player
 			// Main.p.drawPlayer();
-			e.drawEnemy(); //For right now this actually only controls the enemy behavior - actually drawing is done by the animations
+			e.drawEnemy(); //Doesn't actually draw - controls enemy behavior
 			// 2. Draw enemy + player health bars
 			// health bars should change size and color based on health
 			drawHealthBars();
@@ -173,7 +147,7 @@ public class DemoGameScene extends Scene {
 						public void clickAction(Main main) {
 							Main.p.health = startingHealth; 
 							Main.p.energy = startingEnergy;
-							Main.s = new DemoGameScene(main, Main.p);
+							Main.s = new BossLevel1(main);
 						}
 					};
 					menuButton.action = new ButtonAction() {
@@ -275,22 +249,22 @@ public class DemoGameScene extends Scene {
 		// println("playerRed = " + playerRed + ", playerGreen = " + playerGreen, ",
 		// health percentage = " + healthRatio);
 		main.fill(playerRed, playerGreen, 0);
-		main.rect(0, 0, Main.screenX * 0.1f, Main.screenY * healthRatio, Main.screenX * 0.05f); // Player's health bar
+		main.rect(0, Main.screenY, Main.screenX * 0.1f, -Main.screenY * healthRatio, Main.screenX * 0.05f); // Player's health bar
 		main.fill(enemyRed, enemyGreen, 0);
-		main.rect(Main.screenX * 0.9f, 0, Main.screenX * 0.1f, Main.screenY * enemyHealthRatio, Main.screenX * 0.05f);
+		main.rect(Main.screenX * 0.9f, Main.screenY, Main.screenX * 0.1f, -Main.screenY * enemyHealthRatio, Main.screenX * 0.05f);
 		// 3. Draw energy bar
 		// attacking reduces energy, clearing runes fills it
 		main.fill(0, 0, 0); // background for the energy bar
-		main.rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1f,
-				gridRightEdge - gridLeftEdge, Main.screenX * 0.1f);
+		main.rect(gridLeftEdge, (gridRightEdge - gridLeftEdge) + Main.screenX * 0.1f,
+				gridRightEdge - gridLeftEdge, -Main.screenX * 0.1f);
 		main.fill(200, 200, 255); // draw the energy bar
-		main.rect(gridLeftEdge, Main.screenY - (gridRightEdge - gridLeftEdge) - Main.screenX * 0.1f,
-				(gridRightEdge - gridLeftEdge) * (Main.p.energy / Main.p.maxEnergy), Main.screenX * 0.1f,
+		main.rect(gridRightEdge, (gridRightEdge - gridLeftEdge) + Main.screenX * 0.1f,
+				-(gridRightEdge - gridLeftEdge) * (Main.p.energy / Main.p.maxEnergy), -Main.screenX * 0.1f,
 				Main.screenX * 0.05f);
 		// 4. Draw spellbox
 		main.noFill();
-		main.rect(gridLeftEdge + (runeSize * start), Main.screenY - (runeSize * boxHeight), runeSize * boxWidth,
-				runeSize * boxHeight);
+		main.rect(gridLeftEdge + (runeSize * start), (runeSize * boxHeight), runeSize * boxWidth,
+				-runeSize * boxHeight);
 	}
 
 	// There should always be a rune falling from the top of the screen. If there is
@@ -303,26 +277,26 @@ public class DemoGameScene extends Scene {
 		// horizontal center
 		if (label.equals("Fire")) {
 			currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
+					(runeSize / 2.0f) + (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Created a new Fire Rune X =" + Main.screenX * 0.5 + ", y = 0.0, size
 			// = " + runeSize);
 		} else if (label.equals("Heal")) {
 			currentRune = new HealRune("Heal", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
+					(runeSize / 2.0f) + (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Created a new Healing Rune. X =" + Main.screenX * 0.5 + ", y = 0.0,
 			// size = " + runeSize);
 		} else if (label.equals("Slash")) {
 			currentRune = new SlashRune("Slash", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
+					(runeSize / 2.0f) + (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Created a new Slash Rune X =" + Main.screenX * 0.5 + ", y = 0.0,
 			// size = " + runeSize);
 		} else {
 			currentRune = new FireRune("Fire", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
+					(runeSize / 2.0f) + (runeSize * (gridSize - 1)), runeSize, main);
 			// println("Label not recognized =" + Main.screenX * 0.5 + ", y = 0.0, size = "
 			// + runeSize);
 		}
-		currentRune.speedY = 1;
+		currentRune.speedY = -2;
 		nextRune = false;
 	}
 
@@ -331,12 +305,12 @@ public class DemoGameScene extends Scene {
 	public void checkCollisions() {
 		squareX = ((int) ((currentRune.x - gridLeftEdge) / runeSize)); // squareX and squareY represent the current
 																		// rune's position in the rune grid
-		squareY = ((int) ((Main.screenY - currentRune.y) / runeSize));
+		squareY = ((int) ((currentRune.y) / runeSize));
 		// Floor represents a bottom edge that the rune should not go below
-		float floor = Main.screenY;
+		float floor = 0;
 		for (int i = gridSize - 1; i >= 0; i--) {
 			if (!(r[i][squareX].type.equals("Null"))) {
-				floor = Main.screenY - (runeSize * (i + 1));
+				floor = (runeSize * (i + 1));
 				break;
 			}
 		}
@@ -360,14 +334,14 @@ public class DemoGameScene extends Scene {
 		// = " + leftEdge);
 		// Prevents the rune from going any lower than the bottom of the screen. If rune
 		// gets that far, add it to the grid and create new rune
-		if ((currentRune.y + (currentRune.size / 2) + currentRune.speedY) >= floor) {
+		if ((currentRune.y - (currentRune.size / 2) + currentRune.speedY) <= floor) {
 			r[squareY][squareX] = currentRune;
 			currentRune.x = (Main.screenX * 0.1f) + (runeSize / 2) + (runeSize * squareX);
-			currentRune.y = (Main.screenY) - (runeSize / 2) - (runeSize * squareY);
+			currentRune.y = (runeSize / 2) + (runeSize * squareY);
 			currentRune.speedX = 0;
 			currentRune.speedY = 0;
 			currentRune = new NullRune("Null", ((gridRightEdge - gridLeftEdge) / 2.0f) + gridLeftEdge,
-					(Main.screenY) - (runeSize / 2.0f) - (runeSize * (gridSize - 1)), runeSize, main);
+					(runeSize / 2.0f) + (runeSize * (gridSize - 1)), runeSize, main);
 			nextRune = true;
 			clearRunes(); // new rune added to the grid - clear any duplicates
 		}
@@ -436,11 +410,11 @@ public class DemoGameScene extends Scene {
 						for (int l = k; l < gridSize - 1; l++) {
 							r[l - chain][j] = r[l][j]; // Drop the runes down to fill in the missing space
 							animations.add(new RuneAnimation(r[l - chain][j], r[l - chain][j].x, r[l - chain][j].y, 0,
-									1, 0, r[l - chain][j].y + runeSize * chain));
+									-1, 0, r[l - chain][j].y - runeSize * chain));
 							// r[l - chain][j].y += runeSize * chain;
 							// replace the missing rune
 							r[l][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-									(Main.screenY) - (runeSize / 2) - (runeSize * l), runeSize, main);
+									(runeSize / 2) - (runeSize * l), runeSize, main);
 						}
 						Main.p.energy += chain; // Add cleared runes to the player's energy
 						if (Main.p.energy > Main.p.maxEnergy) {
@@ -485,7 +459,7 @@ public class DemoGameScene extends Scene {
 								r[m][l].y += runeSize;
 								// Replace the removed rune with a null rune
 								r[m + 1][l] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * l),
-										(Main.screenY) - (runeSize / 2) - (runeSize * (m + 1)), runeSize, main);
+										(runeSize / 2) + (runeSize * (m + 1)), runeSize, main);
 							}
 						}
 						Main.p.energy += chain; // Add cleared runes to the player's energy
@@ -566,7 +540,7 @@ public class DemoGameScene extends Scene {
 		for (int i = 0; i < boxHeight; i++) {
 			for (int j = start; j < end; j++) {
 				r[i][j] = new NullRune("Null", gridLeftEdge + (runeSize / 2.0f) + (runeSize * j),
-						(Main.screenY) - (runeSize / 2) - (runeSize * i), runeSize, main);
+						(runeSize / 2) + (runeSize * i), runeSize, main);
 			}
 		}
 	}
@@ -648,11 +622,11 @@ public class DemoGameScene extends Scene {
 	public void keyPressed() {
 		if (main.key == Main.CODED) {
 			if (main.keyCode == Main.LEFT) {
-				currentRune.speedX = -3;
+				currentRune.speedX = 6;
 			} else if (main.keyCode == Main.RIGHT) {
-				currentRune.speedX = 3;
+				currentRune.speedX = -6;
 			} else if (main.keyCode == Main.DOWN) {
-				currentRune.speedY = 3;
+				currentRune.speedY = -6;
 			}
 		} else if (main.key == ' ') {
 			castSpell();
@@ -672,7 +646,7 @@ public class DemoGameScene extends Scene {
 			} else if (main.keyCode == Main.RIGHT) {
 				currentRune.speedX = 0;
 			} else if (main.keyCode == Main.DOWN) {
-				currentRune.speedY = 1;
+				currentRune.speedY = -2;
 			}
 		}
 	}

@@ -132,7 +132,7 @@ public class MapScene extends Scene {
 			}
 			else if(clickedButton == bossLevel)
 			{
-				//Main.s = new BossLevel1(main);
+				Main.s = new BossLevel1(main);
 			}
 		}
 		//characterSprite.x = currentButton.x;

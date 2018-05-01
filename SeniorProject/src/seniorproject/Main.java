@@ -4,6 +4,7 @@ import processing.core.*;
 import processing.data.*;
 import scenes.Scene;
 import scenes.StartMenu;
+import scenes.BossLevel1;
 import scenes.DemoGameScene;
 import scenes.MapScene;
 
@@ -134,7 +135,10 @@ public class Main extends PApplet {
 				//println(listFile.getAbsolutePath());
 				String[] fileStrings = loadStrings(listFile);
 				ArrayList<String> fileList = new ArrayList<String>(Arrays.asList(fileStrings)); 
-				fileList.add(p.name);
+				if(!fileList.contains(p.name))
+				{
+					fileList.add(p.name);
+				}
 				fileStrings = fileList.toArray(fileStrings);
 				saveStrings(listFile, fileStrings);
 				PrintWriter writeCharacter = createWriter(characterFile);

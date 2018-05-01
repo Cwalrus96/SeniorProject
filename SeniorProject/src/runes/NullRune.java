@@ -11,7 +11,10 @@ public class NullRune extends Rune {
 	// For now, the rune will just be drawn as a red circle
 	public void drawRune() {
 		/**
-		 * noFill(); x = x + speedX; y = y + speedY; ellipse(x,y,size,size);
+		  main.noFill(); 
+		  x = x + speedX; 
+		  y = y + speedY; 
+		  main.ellipse(x,y,size,size);
 		 **/
 	}
 
