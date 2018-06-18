@@ -1,6 +1,6 @@
 package animations;
 
-import seniorproject.Main;
+import main.Main;
 
 public abstract class Animation
 {

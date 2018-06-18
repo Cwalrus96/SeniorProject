@@ -2,9 +2,9 @@ package scenes;
 
 import java.io.File;
 import java.util.ArrayList;
-import userInterface.ButtonAction;
 
-import seniorproject.Main;
+import main.Main;
+import userInterface.ButtonAction;
 import userInterface.GameButton;
 
 /**

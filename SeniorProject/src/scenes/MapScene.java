@@ -1,9 +1,9 @@
 package scenes;
 
 import animations.SpriteAnimation;
-import seniorproject.CharacterStatus;
-import seniorproject.Main;
-import seniorproject.Player;
+import main.CharacterStatus;
+import main.Main;
+import main.Player;
 import userInterface.ButtonAction;
 import userInterface.GameButton;
 
@@ -25,13 +25,13 @@ public class MapScene extends Scene {
 				main);
 		
 		level1 = new GameButton(Main.screenX * 0.7f, Main.screenX * 0.8f, Main.screenX * 0.2f, Main.screenX * 0.2f,
-				Main.p.unlockedLevels.get(1), "1", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
+				Main.p.unlockedStages.get(1), "1", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
 		
 		level2 = new GameButton(Main.screenX * 0.1f, Main.screenX * 0.2f, Main.screenX * 0.2f, Main.screenX * 0.2f,
-				Main.p.unlockedLevels.get(2), "2", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
+				Main.p.unlockedStages.get(2), "2", main.color(100, 255, 100), main.color(55, 255, 55), 0, 100, 25, Main.screenX * 0.1f, main);
 		
 		bossLevel = new GameButton(Main.screenX * 0.65f, Main.screenX * 0.15f, Main.screenX * 0.3f, Main.screenX * 0.3f,
-				Main.p.unlockedLevels.get(3), "Boss", main.color(255, 100, 100), main.color(255, 55, 55), 0, 100, 25, Main.screenX * 0.15f,
+				Main.p.unlockedStages.get(3), "Boss", main.color(255, 100, 100), main.color(255, 55, 55), 0, 100, 25, Main.screenX * 0.15f,
 				main);
 		
 		level1.action = new ButtonAction() {
@@ -56,15 +56,15 @@ public class MapScene extends Scene {
 		};
 				
 		Main.p.status = CharacterStatus.IDLE;
-		if(Main.p.currentLevel == 1)
+		if(Main.p.currentStage == 1)
 		{
 			currentButton = level1; 
 		}
-		else if(Main.p.currentLevel == 2)
+		else if(Main.p.currentStage == 2)
 		{
 			currentButton = level2;
 		}
-		else if(Main.p.currentLevel == 3)
+		else if(Main.p.currentStage == 3)
 		{
 			currentButton = bossLevel;
 		}
@@ -116,15 +116,15 @@ public class MapScene extends Scene {
 		{
 			if(currentButton == level1)
 			{
-				Main.p.currentLevel = 1;
+				Main.p.currentStage = 1;
 			}
 			else if(currentButton == level2)
 			{
-				Main.p.currentLevel = 2; 
+				Main.p.currentStage = 2; 
 			}
 			else if(currentButton == bossLevel)
 			{
-				Main.p.currentLevel = 3;
+				Main.p.currentStage = 3;
 			}
 			if(clickedButton == level1 || clickedButton == level2)
 			{

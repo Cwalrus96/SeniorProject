@@ -1,6 +1,6 @@
 package runes;
 
-import seniorproject.Main;
+import main.Main;
 
 //This class will be used to logically represent the skill tree
 public class SlashRune extends Rune {

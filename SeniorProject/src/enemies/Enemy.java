@@ -1,6 +1,6 @@
 package enemies;
 
-import seniorproject.Main;
+import main.Main;
 
 /* TODO 
 Add enemy + boss subclasses for different enemy types 

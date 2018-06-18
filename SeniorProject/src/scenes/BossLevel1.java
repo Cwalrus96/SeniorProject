@@ -7,13 +7,13 @@ import animations.RuneAnimation;
 import animations.SpriteAnimation;
 import enemies.Boss1;
 import enemies.Enemy;
+import main.Main;
+import main.Player;
 import runes.NullRune;
 import runes.FireRune;
 import runes.HealRune; 
 import runes.SlashRune;
 import runes.Rune;
-import seniorproject.Main;
-import seniorproject.Player;
 import userInterface.ButtonAction;
 import userInterface.GameButton;
 
@@ -103,7 +103,7 @@ public class BossLevel1 extends Scene {
 				if(status != GameStatus.WIN)
 				{
 					status = GameStatus.WIN;
-					Main.p.unlockedLevels.replace(3, true); 
+					Main.p.unlockedStages.replace(3, true); 
 					main.savePlayer(); 
 					//Add buttons
 					buttons.clear();

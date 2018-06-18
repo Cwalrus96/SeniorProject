@@ -1,8 +1,8 @@
 package scenes;
 
+import main.CharacterClass;
+import main.Main;
 import processing.core.PImage;
-import seniorproject.CharacterClass;
-import seniorproject.Main;
 import userInterface.ButtonAction;
 import userInterface.GameButton;
 

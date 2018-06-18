@@ -1,6 +1,6 @@
 package runes;
 
-import seniorproject.Main;
+import main.Main;
 
 public class NullRune extends Rune {
 

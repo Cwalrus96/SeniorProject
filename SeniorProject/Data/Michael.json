@@ -1,0 +1,21 @@
+{
+  "currentLevel": 2,
+  "unlockedLevels": [
+    true,
+    true,
+    true
+  ],
+  "maxEnergy": 50,
+  "characterClass": "Knight",
+  "unlockedRunes": [
+    "Fire",
+    "Slash",
+    "Heal"
+  ],
+  "name": "Michael",
+  "x": 75,
+  "health": 0,
+  "y": 292,
+  "maxHealth": 100,
+  "energy": 1
+}

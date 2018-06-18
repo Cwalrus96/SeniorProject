@@ -1,6 +1,6 @@
 package userInterface;
 
-import seniorproject.Main;
+import main.Main;
 
 public interface ButtonAction {
 	
