@@ -7,8 +7,53 @@ import java.util.ArrayList;
  * Finally, each node will have a name or ID 
  */
 public class GameNode {
-	String name; 
-	ArrayList<GameNode> parentNodes;
-	ArrayList<GameNode> childNodes; 
-	NodeStatus status; 
+	private String name; 
+	private ArrayList<GameNode> parentNodes;
+	private ArrayList<GameNode> childNodes; 
+	private NodeStatus status; 
+	private UnlockType unlockType; 
+	
+	public NodeStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(NodeStatus status) {
+		this.status = status;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public ArrayList<GameNode> getParentNodes() {
+		return parentNodes;
+	}
+
+	public ArrayList<GameNode> getChildNodes() {
+		return childNodes;
+	}
+
+	GameNode(String name) {
+		this.name = name; 
+		parentNodes = new ArrayList<GameNode>(); 
+		childNodes = new ArrayList<GameNode>(); 
+		status = NodeStatus.UNAVAILABLE;
+		setUnlockType(UnlockType.OR);
+	}
+
+	public void addParent(GameNode p) {
+		parentNodes.add(p);
+	}
+
+	public void addChild(GameNode c) {
+		childNodes.add(c);
+	}
+
+	public UnlockType getUnlockType() {
+		return unlockType;
+	}
+
+	public void setUnlockType(UnlockType unlockType) {
+		this.unlockType = unlockType;
+	}
 }
