@@ -16,7 +16,6 @@ import java.util.Arrays;
 public class Main extends PApplet {
 
 	/**
-	 * Create a tree structure to handle unlocking of levels and skills
 	 * Move stages and runes to be a global thing (in the "Main" class), and just have players keep track of what has/hasn't been unlocked? 
 	 * Track user levels and experience points Create
 	 * 4 different levels, and a map to move back and forth between. 3 normal
@@ -43,7 +42,9 @@ public class Main extends PApplet {
 	int frameLength; // This variable holds the desired amount of time between frames rendered
 	public static Player p; // Holds information about the current player. For now, simply create a blank
 							// player. In the future, player information will be loaded from a save file
-
+	
+	public GameTree stages; //Keeps track of which stages the player has unlocked so far
+	
 	// 3. This function will be called once to set up the scene
 	public void setup() {
 		/**
@@ -66,6 +67,22 @@ public class Main extends PApplet {
 		oldT = millis();
 		newT = oldT;
 		frameLength = 1000 / targetFPS;
+		initializeStages(); 
+	}
+	
+	//This method will be called during set-up to populate the stages tree with all the stages, as well as the connections between them. 
+	//All stages will have status "unavailable", and the actual status of the stages will be stored by the players
+	private void initializeStages() {
+		stages = new GameTree(); 
+		stages.addNode("Start", null, null, NodeStatus.UNAVAILABLE);
+		stages.addNode("Stage1A",new String[] {"Start"} , null, NodeStatus.UNAVAILABLE); 
+		stages.addNode("Stage1B", new String[] {"Start"}, null, NodeStatus.UNAVAILABLE);
+		stages.addNode("Boss1", new String[] {"Stage1A", "Stage1B"}, null, NodeStatus.UNAVAILABLE);
+		stages.findNode("Start").addChild(stages.findNode("Stage1A"));
+		stages.findNode("Start").addChild(stages.findNode("Stage1B")); 
+		stages.findNode("Stage1A").addChild(stages.findNode("Boss1"));
+		stages.findNode("Stage1B").addChild(stages.findNode("Boss1"));
+		
 	}
 
 	public void draw() // This function draws everything to the screen. For the most part, will simply
@@ -116,11 +133,29 @@ public class Main extends PApplet {
 			}
 			savePlayer.setJSONArray("unlockedRunes", unlockedRunes);
 			savePlayer.setInt("currentStage", p.currentStage);
-			JSONArray unlockedLevels = new JSONArray(); 
-			unlockedLevels.setBoolean(0, p.unlockedStages.get(1));
-			unlockedLevels.setBoolean(1, p.unlockedStages.get(2));
-			unlockedLevels.setBoolean(2, p.unlockedStages.get(3));
-			savePlayer.setJSONArray("unlockedStages", unlockedLevels);
+			JSONArray saveStages = new JSONArray();
+			String nodeStatus = null; 
+			
+			i = 0; 
+			for(GameNode s : stages.nodes) {
+				JSONObject stage = new JSONObject();
+				if(s.getStatus() == NodeStatus.AVAILABLE) {
+					nodeStatus = "AVAILABLE"; 
+				}
+				else if(s.getStatus() == NodeStatus.UNAVAILABLE) {
+					nodeStatus = "UNAVAILABLE"; 
+				}
+				else if(s.getStatus() == NodeStatus.UNLOCKED) {
+					nodeStatus = "UNLOCKED";
+				}
+				else {
+					nodeStatus = "STATUS UNKNOWN";
+				}
+				stage.setString(s.getName(), nodeStatus);
+				saveStages.setJSONObject(i, stage);
+				i++; 
+			}
+			savePlayer.setJSONArray("stages", saveStages);
 			
 			if (!listFile.isFile()) // if listFile doesn't exist create it, add the character's name, and create a
 									// file for the character
