@@ -1,7 +1,12 @@
 Characters start by choosing their class 
-	Wizard (high magic and utility, low defense ) 
-	Knight (tanky, low utility, low magic) 
-	Rogue (high speed, rapid attacks, ranged attacks? )
+	Martial Artist 
+	Ninja
+	Magical Girl 
+	Mech Pilot
+	Rogue
+	Animal Companion
+	Gamer 
+	
 	
 	
 	What stats do I want? 

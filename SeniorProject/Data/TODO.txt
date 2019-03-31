@@ -1,0 +1,32 @@
+Demo Game Scene 
+/**
+ * TODO Implement mouse controls Implement on-screen buttons? Figure out a different way
+ * to handle attacks besides hardcoding them. Should use some combination of the
+ * player/enemy's stats. Replace RuneAnimation with SpriteAnimations? 
+ * refactor + separate pieces into different classes? 
+ **/
+ 
+ Player 
+ // TODO: Expand player - allow customization, keep track of unlocked skills and
+	// abilities,
+	// Track stats, experience, level, appearance, inventory, equipment, etc.
+	//Consider creating a separate "progress" object to use when loading the character? maybe several?
+	
+Main 
+TODO: Implement function
+		 * to adjust display based on size and resolution of the screen, while
+		 * maintaining aspect ratio
+		 * /**
+	 * Move stages and runes to be a global thing (in the "Main" class), and just have players keep track of what has/hasn't been unlocked? 
+	 * Track user levels and experience points 
+	 * Create different levels, and a map to move back and forth between. Levels should introduce players to basic game concepts  
+	 * Add animations for enemies and attacks 
+	 * Adjust animations for clearing runes + add combos? 
+	 * Turn runes into sprites Add backgrounds +
+	 * spruce up user interface replace buttons with sprites?
+	 * add additional stats to Player 
+	 * Improve customization options 
+	 * add a "view character" screen so that players can see their stats? 
+	 * add items - shops on map? 
+	 * Adjust character select so that players can pick between anime character classes, as well as Gender 
+	 **/

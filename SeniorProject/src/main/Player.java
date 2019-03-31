@@ -9,11 +9,7 @@ import java.util.Map;
 import animations.SpriteAnimation;
 
 public class Player {
-	// 1. Global Variables - will expand over time. For right now, need health and runes.
-	// TODO: Expand player - allow customization, keep track of unlocked skills and
-	// abilities,
-	// Track stats, experience, level, appearance, inventory, equipment, etc.
-	//Consider creating a separate "progress" object to use when loading the character? maybe several? 
+	// 1. Global Variables - will expand over time. For right now, need health and runes. 
 
 	String name;
 	public float maxHealth; // Keeps track of the player's maximum health value
@@ -29,7 +25,7 @@ public class Player {
 	SpriteAnimation sprite;
 	public boolean statusChange;
 	Main main;
-	public int currentStage; //Keeps track of the player's current location on the map (which stage are they on)
+	public String currentStage; //Keeps track of the player's current location on the map (which stage are they on)
 	
 	public Player(Main main) // Used to create a null or default character
 	{
@@ -47,7 +43,7 @@ public class Player {
 		this.main = main;
 		status = CharacterStatus.IDLE;
 		this.characterClass = CharacterClass.WIZARD;
-		currentStage = 0; 
+		currentStage = "Start"; 
 		main.stages.findNode("Start").setStatus(NodeStatus.UNLOCKED);
 		main.stages.findNode("Stage1A").setStatus(NodeStatus.AVAILABLE);
 		main.stages.findNode("Stage1B").setStatus(NodeStatus.AVAILABLE);
@@ -67,7 +63,7 @@ public class Player {
 		y = Main.screenY - Main.screenX;
 		status = CharacterStatus.IDLE;
 		this.name = name;
-		currentStage = 0; 
+		currentStage = "Start"; 
 		main.stages.findNode("Start").setStatus(NodeStatus.UNLOCKED);
 		main.stages.findNode("Stage1A").setStatus(NodeStatus.AVAILABLE);
 		main.stages.findNode("Stage1B").setStatus(NodeStatus.AVAILABLE);
@@ -75,7 +71,7 @@ public class Player {
 
 	// This constructor is used when loading a character from a JSON file
 	public Player(float maxHealth, float health, float maxEnergy, float energy, String[] unlockedRunes,
-			CharacterClass characterClass, String name, int currentLevel) {
+			CharacterClass characterClass, String name, String currentStage) {
 		this.maxHealth = maxHealth;
 		this.health = health;
 		this.maxEnergy = maxEnergy;
@@ -86,7 +82,7 @@ public class Player {
 		y = Main.screenY - Main.screenX;
 		this.characterClass = characterClass;
 		status = CharacterStatus.IDLE;
-		this.currentStage = currentLevel; 
+		this.currentStage = currentStage; 
 	}
 
 	public String getSpriteFile() {

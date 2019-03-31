@@ -103,7 +103,7 @@ public class BossLevel1 extends Scene {
 				if(status != GameStatus.WIN)
 				{
 					status = GameStatus.WIN;
-					Main.p.unlockedStages.replace(3, true); 
+					main.stages.unlockNode(main.stages.findNode("Boss1"));
 					main.savePlayer(); 
 					//Add buttons
 					buttons.clear();

@@ -17,11 +17,7 @@ import userInterface.ButtonAction;
 import userInterface.GameButton;
 
 //This scene represents the actual gameplay of the game. For now, will make simplest possible demo version. 
-/**
- * TODO Implement mouse controls Implement on-screen buttons? Figure out a different way
- * to handle attacks besides hardcoding them. Should use some combination of the
- * player/enemy's stats. Replace RuneAnimation with SpriteAnimations? 
- **/
+
 public class DemoGameScene extends Scene {
 
 	// 1. Class Variables
@@ -128,7 +124,7 @@ public class DemoGameScene extends Scene {
 				if(status != GameStatus.WIN)
 				{
 					status = GameStatus.WIN;
-					Main.p.unlockedStages.replace(3, true); 
+					main.stages.unlockNode(main.stages.findNode("Boss1")); 
 					main.savePlayer(); 
 					//Add buttons
 					buttons.clear();

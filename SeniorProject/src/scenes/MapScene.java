@@ -56,15 +56,15 @@ public class MapScene extends Scene {
 		};
 				
 		Main.p.status = CharacterStatus.IDLE;
-		if(Main.p.currentStage == 1)
+		if(Main.p.currentStage == "Stage1A")
 		{
 			currentButton = level1; 
 		}
-		else if(Main.p.currentStage == 2)
+		else if(Main.p.currentStage == "Stage1B")
 		{
 			currentButton = level2;
 		}
-		else if(Main.p.currentStage == 3)
+		else if(Main.p.currentStage == "Boss1")
 		{
 			currentButton = bossLevel;
 		}
@@ -77,12 +77,6 @@ public class MapScene extends Scene {
 
 	@Override
 	public void drawScene(long diff) {
-		/**
-		 * TODO - Draw map background Draw levels as nodes on the map 
-		 * Draw connections between nodes 
-		 * Draw player sprite (in "Idle" state) on the currently selected node 
-		 * Keep track of which nodes have/haven't been unlocked.
-		 */
 		// 1. Draw Map background
 		main.clear();
 		main.background(255); // Replace with background image?
@@ -116,15 +110,15 @@ public class MapScene extends Scene {
 		{
 			if(currentButton == level1)
 			{
-				Main.p.currentStage = 1;
+				Main.p.currentStage = "Stage1A";
 			}
 			else if(currentButton == level2)
 			{
-				Main.p.currentStage = 2; 
+				Main.p.currentStage = "Stage1B"; 
 			}
 			else if(currentButton == bossLevel)
 			{
-				Main.p.currentStage = 3;
+				Main.p.currentStage = "Boss1";
 			}
 			if(clickedButton == level1 || clickedButton == level2)
 			{
