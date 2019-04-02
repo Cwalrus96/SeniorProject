@@ -17,7 +17,6 @@ public class Main extends PApplet {
 
 	/**
 	 * Create a tree structure to handle unlocking of levels and skills
-	 * Move stages and runes to be a global thing (in the "Main" class), and just have players keep track of what has/hasn't been unlocked? 
 	 * Track user levels and experience points Create
 	 * 4 different levels, and a map to move back and forth between. 3 normal
 	 * enemies and 1 boss Add animations for enemies and attacks Adjust animations
@@ -53,7 +52,6 @@ public class Main extends PApplet {
 		 * to test if the game works well on that sized screen. TODO: Implement function
 		 * to adjust display based on size and resolution of the screen, while
 		 * maintaining aspect ratio
-		 * 
 		 **/
 
 		// b. Initialize Global Variables
