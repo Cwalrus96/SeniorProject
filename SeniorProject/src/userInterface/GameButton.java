@@ -1,7 +1,7 @@
 package userInterface;
 
-import main.Main;
 import processing.core.PImage;
+import seniorproject.Main;
 
 //This class will be used anytime there is a clickable button on the screen 
 

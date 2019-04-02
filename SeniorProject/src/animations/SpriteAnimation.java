@@ -2,8 +2,8 @@ package animations;
 
 import java.io.File;
 
-import main.Main;
 import processing.core.PImage;
+import seniorproject.Main;
 
 public class SpriteAnimation extends Animation {
 

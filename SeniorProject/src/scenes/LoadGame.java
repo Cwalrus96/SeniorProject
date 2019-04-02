@@ -2,7 +2,7 @@ package scenes;
 
 import java.util.ArrayList;
 
-import main.Main;
+import seniorproject.Main;
 import userInterface.ButtonAction;
 import userInterface.GameButton;
 

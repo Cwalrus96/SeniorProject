@@ -6,21 +6,22 @@ import animations.Animation;
 import animations.RuneAnimation;
 import animations.SpriteAnimation;
 import enemies.Enemy;
-import main.Main;
-import main.Player;
 import runes.NullRune;
 import runes.FireRune;
 import runes.HealRune; 
 import runes.SlashRune;
 import runes.Rune;
+import seniorproject.Main;
+import seniorproject.Player;
 import userInterface.ButtonAction;
 import userInterface.GameButton;
 
 //This scene represents the actual gameplay of the game. For now, will make simplest possible demo version. 
 /**
- * TODO Implement mouse controls Implement on-screen buttons? Figure out a different way
+ * TODO Implement mouse controls Implement on-screen buttons? Make "GameState"
+ * enum, and convert all state checks to use the enum Figure out a different way
  * to handle attacks besides hardcoding them. Should use some combination of the
- * player/enemy's stats. Replace RuneAnimation with SpriteAnimations? 
+ * player/enemy's stats Replace RuneAnimation with SpriteAnimations? Also,
  **/
 public class DemoGameScene extends Scene {
 
@@ -128,7 +129,7 @@ public class DemoGameScene extends Scene {
 				if(status != GameStatus.WIN)
 				{
 					status = GameStatus.WIN;
-					Main.p.unlockedStages.replace(3, true); 
+					Main.p.unlockedLevels.replace(3, true); 
 					main.savePlayer(); 
 					//Add buttons
 					buttons.clear();
@@ -177,8 +178,6 @@ public class DemoGameScene extends Scene {
 					};
 					menuButton.action = new ButtonAction() {
 						public void clickAction(Main main) {
-							Main.p.health = startingHealth; 
-							Main.p.energy = startingEnergy;
 							main.savePlayer(); 
 							Main.s = new StartMenu(main);
 						}

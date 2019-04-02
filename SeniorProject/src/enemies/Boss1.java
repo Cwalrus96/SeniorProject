@@ -1,6 +1,6 @@
 package enemies;
 
-import main.Main;
+import seniorproject.Main;
 
 public class Boss1 extends Enemy {
 

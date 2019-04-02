@@ -1,4 +1,4 @@
-package main;
+package seniorproject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,14 +29,14 @@ public class Player {
 	SpriteAnimation sprite;
 	public boolean statusChange;
 	Main main;
-	public int currentStage; //Keeps track of the player's current location on the map (which stage are they on)
-	public Map<Integer, Boolean> unlockedStages; //Keeps track of which stages the player has unlocked so far
+	public int currentLevel; //Keeps track of the player's current location on the map (which level are they on)
+	public Map<Integer, Boolean> unlockedLevels; //Keeps track of which levels the player has unlocked so far
 	
 	public Player(Main main) // Used to create a null or default character
 	{
 		maxHealth = 100.0f;
 		health = maxHealth;
-		maxEnergy = 50.0f;
+		maxEnergy = 50;
 		energy = maxEnergy;
 		unlockedRunes = new ArrayList<String>();
 		unlockedRunes.add("Fire");
@@ -48,12 +48,12 @@ public class Player {
 		this.main = main;
 		status = CharacterStatus.IDLE;
 		this.characterClass = CharacterClass.WIZARD;
-		currentStage = 0; 
-		unlockedStages = new HashMap<Integer, Boolean>(); 
-		unlockedStages.put(0, true);
-		unlockedStages.put(1, true);
-		unlockedStages.put(2, true);
-		unlockedStages.put(3, false);
+		currentLevel = 0; 
+		unlockedLevels = new HashMap<Integer, Boolean>(); 
+		unlockedLevels.put(0, true);
+		unlockedLevels.put(1, true);
+		unlockedLevels.put(2, true);
+		unlockedLevels.put(3, false);
 	}
 
 	public Player(String name) // Used to create a default character with the given name
@@ -70,12 +70,12 @@ public class Player {
 		y = Main.screenY - Main.screenX;
 		status = CharacterStatus.IDLE;
 		this.name = name;
-		currentStage = 0; 
-		unlockedStages = new HashMap<Integer, Boolean>();
-		unlockedStages.put(0, true);
-		unlockedStages.put(1, true);
-		unlockedStages.put(2, true);
-		unlockedStages.put(3, false);
+		currentLevel = 0; 
+		unlockedLevels = new HashMap<Integer, Boolean>();
+		unlockedLevels.put(0, true);
+		unlockedLevels.put(1, true);
+		unlockedLevels.put(2, true);
+		unlockedLevels.put(3, false);
 	}
 
 	// This constructor is used when loading a character from a JSON file
@@ -92,12 +92,12 @@ public class Player {
 		y = Main.screenY - Main.screenX;
 		this.characterClass = characterClass;
 		status = CharacterStatus.IDLE;
-		this.currentStage = currentLevel; 
-		unlockedStages = new HashMap<Integer, Boolean>();
-		unlockedStages.put(0, true);
-		unlockedStages.put(1, unlocked1); 
-		unlockedStages.put(2, unlocked2);
-		unlockedStages.put(3, unlocked3);
+		this.currentLevel = currentLevel; 
+		unlockedLevels = new HashMap<Integer, Boolean>();
+		unlockedLevels.put(0, true);
+		unlockedLevels.put(1, unlocked1); 
+		unlockedLevels.put(2, unlocked2);
+		unlockedLevels.put(3, unlocked3);
 	}
 
 	public String getSpriteFile() {

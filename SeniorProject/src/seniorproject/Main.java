@@ -1,4 +1,4 @@
-package main;
+package seniorproject;
 
 import processing.core.*;
 import processing.data.*;
@@ -16,16 +16,14 @@ import java.util.Arrays;
 public class Main extends PApplet {
 
 	/**
-	 * Create a tree structure to handle unlocking of levels and skills
-	 * Track user levels and experience points Create
+	 * TODO: Add button class to ease addition of buttons fine better IDE so I don't
+	 * have to use tabs? Allow user to click on the "load game" button, and use the
+	 * character file to populate the character create 2 different character classes
+	 * (at least) - Knight and Mage? Track user levels and experience points Create
 	 * 4 different levels, and a map to move back and forth between. 3 normal
 	 * enemies and 1 boss Add animations for enemies and attacks Adjust animations
 	 * for clearing runes + add combos? Turn runes into sprites Add backgrounds +
 	 * spruce up user interface replace buttons with sprites?
-	 * add additional stats to Player 
-	 * Improve customization options 
-	 * add a "view character" screen so that players can see their stats? 
-	 * add items - shops on map? 
 	 **/
 
 	// 1. Global Variables
@@ -113,12 +111,12 @@ public class Main extends PApplet {
 				i++;
 			}
 			savePlayer.setJSONArray("unlockedRunes", unlockedRunes);
-			savePlayer.setInt("currentStage", p.currentStage);
+			savePlayer.setInt("currentLevel", p.currentLevel);
 			JSONArray unlockedLevels = new JSONArray(); 
-			unlockedLevels.setBoolean(0, p.unlockedStages.get(1));
-			unlockedLevels.setBoolean(1, p.unlockedStages.get(2));
-			unlockedLevels.setBoolean(2, p.unlockedStages.get(3));
-			savePlayer.setJSONArray("unlockedStages", unlockedLevels);
+			unlockedLevels.setBoolean(0, p.unlockedLevels.get(1));
+			unlockedLevels.setBoolean(1, p.unlockedLevels.get(2));
+			unlockedLevels.setBoolean(2, p.unlockedLevels.get(3));
+			savePlayer.setJSONArray("unlockedLevels", unlockedLevels);
 			
 			if (!listFile.isFile()) // if listFile doesn't exist create it, add the character's name, and create a
 									// file for the character
@@ -175,8 +173,8 @@ public class Main extends PApplet {
 		{
 			characterClass = CharacterClass.KNIGHT;
 		}
-		int currentLevel = playerJSON.getInt("currentStage");
-		boolean unlockedLevels[] = playerJSON.getJSONArray("unlockedStages").getBooleanArray();
+		int currentLevel = playerJSON.getInt("currentLevel");
+		boolean unlockedLevels[] = playerJSON.getJSONArray("unlockedLevels").getBooleanArray();
 		p = new Player(maxHealth, health, maxEnergy, energy, unlockedRunes,characterClass, name,
 				currentLevel, unlockedLevels[0], unlockedLevels[1], unlockedLevels[2]);
 		s = new MapScene(this);
@@ -214,7 +212,7 @@ public class Main extends PApplet {
 	}
 
 	static public void main(String[] passedArgs) {
-		String[] appletArgs = new String[] { "main.Main" };
+		String[] appletArgs = new String[] { "seniorproject.Main" };
 		if (passedArgs != null) {
 			PApplet.main(concat(appletArgs, passedArgs));
 		} else {

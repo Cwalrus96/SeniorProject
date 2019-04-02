@@ -1,6 +1,6 @@
 package scenes;
 
-import main.Main;
+import seniorproject.Main;
 
 public abstract class Scene {
 	// 1. Standard Variables that will be inherited by all scenes

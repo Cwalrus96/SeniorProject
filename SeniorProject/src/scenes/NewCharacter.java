@@ -2,8 +2,8 @@ package scenes;
 
 import java.io.File;
 
-import main.Main;
-import main.Player;
+import seniorproject.Main;
+import seniorproject.Player;
 import userInterface.GameButton;
 import userInterface.ButtonAction;
 

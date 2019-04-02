@@ -1,6 +1,6 @@
 package runes;
 
-import main.Main;
+import seniorproject.Main;
 
 public class FireRune extends Rune
 {
