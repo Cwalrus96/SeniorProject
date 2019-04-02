@@ -56,14 +56,4 @@ public class GameNode {
 	public void setUnlockType(UnlockType unlockType) {
 		this.unlockType = unlockType;
 	}
-
-	public boolean clickable() {
-		if(status == NodeStatus.UNAVAILABLE) {
-			return false; 
-		}
-		else if((status == NodeStatus.AVAILABLE) || (status == NodeStatus.UNLOCKED)) {
-			return true;
-		}
-		return false;
-	}
 }

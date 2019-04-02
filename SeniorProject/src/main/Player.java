@@ -30,6 +30,7 @@ public class Player {
 	public boolean statusChange;
 	Main main;
 	public int currentStage; //Keeps track of the player's current location on the map (which stage are they on)
+	public GameTree stages; //Keeps track of which stages the player has unlocked so far
 	
 	public Player(Main main) // Used to create a null or default character
 	{
@@ -48,9 +49,15 @@ public class Player {
 		status = CharacterStatus.IDLE;
 		this.characterClass = CharacterClass.WIZARD;
 		currentStage = 0; 
-		main.stages.findNode("Start").setStatus(NodeStatus.UNLOCKED);
-		main.stages.findNode("Stage1A").setStatus(NodeStatus.AVAILABLE);
-		main.stages.findNode("Stage1B").setStatus(NodeStatus.AVAILABLE);
+		stages = new GameTree(); 
+		stages.addNode("Start", null, null, NodeStatus.UNLOCKED);
+		stages.addNode("Stage1A",new String[] {"Start"} , null, NodeStatus.AVAILABLE); 
+		stages.addNode("Stage1B", new String[] {"Start"}, null, NodeStatus.AVAILABLE);
+		stages.addNode("Boss1", new String[] {"Stage1A", "Stage1B"}, null, NodeStatus.UNAVAILABLE);
+		stages.findNode("Start").addChild(stages.findNode("Stage1A"));
+		stages.findNode("Start").addChild(stages.findNode("Stage1B")); 
+		stages.findNode("Stage1A").addChild(stages.findNode("Boss1"));
+		stages.findNode("Stage1B").addChild(stages.findNode("Boss1"));
 	}
 
 	public Player(String name) // Used to create a default character with the given name
@@ -68,14 +75,21 @@ public class Player {
 		status = CharacterStatus.IDLE;
 		this.name = name;
 		currentStage = 0; 
-		main.stages.findNode("Start").setStatus(NodeStatus.UNLOCKED);
-		main.stages.findNode("Stage1A").setStatus(NodeStatus.AVAILABLE);
-		main.stages.findNode("Stage1B").setStatus(NodeStatus.AVAILABLE);
+		stages = new GameTree(); 
+		stages.addNode("Start", null, null, NodeStatus.UNLOCKED);
+		stages.addNode("Stage1A",new String[] {"Start"} , null, NodeStatus.AVAILABLE); 
+		stages.addNode("Stage1B", new String[] {"Start"}, null, NodeStatus.AVAILABLE);
+		stages.addNode("Boss1", new String[] {"Stage1A", "Stage1B"}, null, NodeStatus.UNAVAILABLE);
+		stages.findNode("Start").addChild(stages.findNode("Stage1A"));
+		stages.findNode("Start").addChild(stages.findNode("Stage1B")); 
+		stages.findNode("Stage1A").addChild(stages.findNode("Boss1"));
+		stages.findNode("Stage1B").addChild(stages.findNode("Boss1"));
 	}
 
 	// This constructor is used when loading a character from a JSON file
 	public Player(float maxHealth, float health, float maxEnergy, float energy, String[] unlockedRunes,
-			CharacterClass characterClass, String name, int currentLevel) {
+			CharacterClass characterClass, String name, int currentLevel, boolean unlocked1, 
+			boolean unlocked2, boolean unlocked3) {
 		this.maxHealth = maxHealth;
 		this.health = health;
 		this.maxEnergy = maxEnergy;
@@ -87,6 +101,11 @@ public class Player {
 		this.characterClass = characterClass;
 		status = CharacterStatus.IDLE;
 		this.currentStage = currentLevel; 
+		stages = new HashMap<Integer, Boolean>();
+		stages.put(0, true);
+		stages.put(1, unlocked1); 
+		stages.put(2, unlocked2);
+		stages.put(3, unlocked3);
 	}
 
 	public String getSpriteFile() {
