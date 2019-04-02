@@ -15,6 +15,19 @@ import java.util.Arrays;
 
 public class Main extends PApplet {
 
+	/**
+	 * Move stages and runes to be a global thing (in the "Main" class), and just have players keep track of what has/hasn't been unlocked? 
+	 * Track user levels and experience points Create
+	 * 4 different levels, and a map to move back and forth between. 3 normal
+	 * enemies and 1 boss Add animations for enemies and attacks Adjust animations
+	 * for clearing runes + add combos? Turn runes into sprites Add backgrounds +
+	 * spruce up user interface replace buttons with sprites?
+	 * add additional stats to Player 
+	 * Improve customization options 
+	 * add a "view character" screen so that players can see their stats? 
+	 * add items - shops on map? 
+	 **/
+
 	// 1. Global Variables
 
 	public static Scene s; // Keeps track of the current screen
@@ -38,21 +51,23 @@ public class Main extends PApplet {
 		 * a. Set the size. This size was chosen because it is the same aspect ratio as
 		 * an Iphone screen, but at a slightly lower resolution. The box appears on my
 		 * screen as about the same size as an actual Iphone screen, which will allow me
-		 * to test if the game works well on that sized screen. 
+		 * to test if the game works well on that sized screen. TODO: Implement function
+		 * to adjust display based on size and resolution of the screen, while
+		 * maintaining aspect ratio
+		 * 
 		 **/
 
 		// b. Initialize Global Variables
 		// i. The first scene should always be the start menu
 		//s = new StartMenu(this);
 		s = new StartMenu(this);
-		initializeStages();
 		p = new Player(this);
 		// These variables will be used to track time and keep the game running at the
 		// target frames per second
 		oldT = millis();
 		newT = oldT;
 		frameLength = 1000 / targetFPS;
-		 
+		initializeStages(); 
 	}
 	
 	//This method will be called during set-up to populate the stages tree with all the stages, as well as the connections between them. 
@@ -66,7 +81,8 @@ public class Main extends PApplet {
 		stages.findNode("Start").addChild(stages.findNode("Stage1A"));
 		stages.findNode("Start").addChild(stages.findNode("Stage1B")); 
 		stages.findNode("Stage1A").addChild(stages.findNode("Boss1"));
-		stages.findNode("Stage1B").addChild(stages.findNode("Boss1"));	
+		stages.findNode("Stage1B").addChild(stages.findNode("Boss1"));
+		
 	}
 
 	public void draw() // This function draws everything to the screen. For the most part, will simply
@@ -116,7 +132,7 @@ public class Main extends PApplet {
 				i++;
 			}
 			savePlayer.setJSONArray("unlockedRunes", unlockedRunes);
-			savePlayer.setString("currentStage", p.currentStage);
+			savePlayer.setInt("currentStage", p.currentStage);
 			JSONArray saveStages = new JSONArray();
 			String nodeStatus = null; 
 			
@@ -196,11 +212,10 @@ public class Main extends PApplet {
 		{
 			characterClass = CharacterClass.KNIGHT;
 		}
-		String currentLevel = playerJSON.getString("currentStage");
+		int currentLevel = playerJSON.getInt("currentStage");
 		boolean unlockedLevels[] = playerJSON.getJSONArray("unlockedStages").getBooleanArray();
-
 		p = new Player(maxHealth, health, maxEnergy, energy, unlockedRunes,characterClass, name,
-				currentLevel);
+				currentLevel, unlockedLevels[0], unlockedLevels[1], unlockedLevels[2]);
 		s = new MapScene(this);
 	}
 

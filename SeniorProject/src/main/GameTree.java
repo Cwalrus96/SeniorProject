@@ -5,11 +5,6 @@ import java.util.ArrayList;
 public class GameTree {
 	ArrayList<GameNode> nodes;
 	
-	//Basic blank constructor that initiates the list of nodes
-	public GameTree() {
-		nodes = new ArrayList<GameNode>(); 
-	}
-	
 	/*This function will be called when an element (either a skill or level) is unlocked. 
 	* sets any applicable child nodes to "available", and sets the nodes status to "unlocked" 
 	* (if it is currently available)
@@ -78,12 +73,10 @@ public class GameTree {
 	}
 
 	public GameNode findNode(String name) {
-		GameNode returnNode = null;
-		if(!nodes.isEmpty()) {
-			for(GameNode n: nodes) {
-				if(n.getName().equals(name)) {
-					returnNode = n; 
-				}
+		GameNode returnNode = null; 
+		for(GameNode n: nodes) {
+			if(n.getName().equals(name)) {
+				returnNode = n; 
 			}
 		}
 		return returnNode;
